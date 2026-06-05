@@ -4,243 +4,774 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>🎓 毕业季·财务抉择 | 词汇·段落·AI英文辩论</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        :root {
+            --teal:       #2EC4B6;
+            --teal-dark:  #1E9E92;
+            --teal-light: #E0F7F5;
+            --amber:      #FF9F1C;
+            --amber-light:#FFF3E0;
+            --bg:         #EEF6FB;
+            --surface:    #FFFFFF;
+            --surface2:   #F4F9FC;
+            --border:     #D9EAF3;
+            --text:       #1A2E3B;
+            --text-muted: #5A7A8C;
+            --success:    #27AE60;
+            --error:      #E53E3E;
+            --shadow:     0 2px 12px rgba(46,196,182,0.10);
+            --shadow-lg:  0 8px 32px rgba(26,46,59,0.12);
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(145deg, #1e2a2a 0%, #0f1c1a 100%);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #d4eef8 0%, #d8f5f0 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px 16px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            color: var(--text);
         }
         .game-container {
-            max-width: 1400px;
+            max-width: 960px;
             width: 100%;
-            background: #fffef7;
-            border-radius: 2rem;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+            background: var(--surface);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
+
+        /* ── Header ── */
         .story-header {
-            background: #2c4f3f;
-            color: #f9e0a0;
-            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+            color: #fff;
+            padding: 18px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            border-bottom: 3px solid #f7bc45;
         }
+        .header-title { font-size: 1.25rem; font-weight: 700; }
+        .header-subtitle { font-size: 0.72rem; opacity: 0.85; margin-top: 2px; }
         .student-info {
-            background: #1e3a32;
-            padding: 6px 18px;
+            background: rgba(255,255,255,0.18);
+            padding: 6px 16px;
             border-radius: 40px;
             display: flex;
-            gap: 12px;
-            align-items: baseline;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.88rem;
+            backdrop-filter: blur(4px);
         }
         .score-board {
-            background: #f7bc45;
-            color: #1f3e2c;
+            background: var(--amber);
+            color: #fff;
             padding: 6px 18px;
             border-radius: 40px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(255,159,28,0.35);
         }
+        #editNameBtn {
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            padding: 2px 10px;
+            color: #fff;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* ── Tabs ── */
         .level-tabs {
             display: flex;
-            background: #e2e6e3;
-            flex-wrap: wrap;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
         }
         .level-tab {
             flex: 1;
             text-align: center;
-            padding: 14px 0;
-            font-weight: 700;
+            padding: 14px 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
             cursor: pointer;
-            background: #d9e0db;
-            color: #2c5a4b;
-            transition: 0.2s;
-            border-right: 1px solid #cbd5cf;
+            color: var(--text-muted);
+            background: var(--surface2);
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
         }
+        .level-tab:hover { color: var(--teal); background: #f0fbfa; }
         .level-tab.active {
-            background: white;
-            color: #1f4e3f;
-            border-bottom: 3px solid #f7bc45;
+            background: var(--surface);
+            color: var(--teal-dark);
+            border-bottom: 3px solid var(--teal);
         }
-        .level-tab.locked {
-            opacity: 0.6;
-            cursor: pointer;
-        }
-        .panel {
-            display: none;
-            padding: 2rem;
-            background: #fffef7;
-            min-height: 620px;
-        }
-        .panel.active-panel {
-            display: block;
-        }
+        .level-tab.locked { opacity: 0.5; }
+
+        /* ── Panels ── */
+        .panel { display: none; padding: 28px; background: var(--surface); min-height: 600px; }
+        .panel.active-panel { display: block; }
+
+        /* ── Story card ── */
         .story-card {
-            background: #fef8e7;
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.8rem;
-            margin-bottom: 1.5rem;
-            border-left: 8px solid #f7bc45;
-            font-size: 1rem;
-            line-height: 1.5;
+            background: var(--teal-light);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 22px;
+            border-left: 5px solid var(--teal);
+            font-size: 0.93rem;
+            line-height: 1.65;
+            color: #1a3a38;
         }
+
+        /* ── Vocab ── */
         .vocab-row {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-            background: #faf7f0;
-            padding: 10px 15px;
-            border-radius: 60px;
+            gap: 10px;
+            margin-bottom: 12px;
+            background: var(--surface2);
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            transition: box-shadow 0.2s;
         }
-        .vocab-def {
-            flex: 2;
-            font-weight: 500;
-        }
+        .vocab-row:hover { box-shadow: var(--shadow); }
+        .vocab-def { flex: 2; font-size: 0.9rem; color: var(--text); min-width: 200px; }
         .vocab-input {
             flex: 1;
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: 1px solid #ddd0b6;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+            min-width: 120px;
+            background: #fff;
         }
+        .vocab-input:focus { border-color: var(--teal); }
         .hint-btn {
-            background: #e9e2d3;
-            border: none;
-            border-radius: 40px;
-            padding: 6px 14px;
+            background: var(--amber-light);
+            color: #b35c00;
+            border: 1.5px solid #ffd08a;
+            border-radius: 10px;
+            padding: 7px 14px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s;
         }
-        .match-item {
-            background: #fef9ef;
-            margin-bottom: 16px;
-            padding: 12px;
-            border-radius: 20px;
-        }
-        .para-input {
-            width: 80px;
-            padding: 6px;
-            border-radius: 30px;
-            border: 1px solid #cfc2a8;
-            text-align: center;
-        }
-        .btn {
-            background: #2c5a4b;
-            border: none;
-            padding: 10px 28px;
-            border-radius: 40px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-gold {
-            background: #f7bc45;
-            color: #2c4a3b;
-        }
-        .preview-badge {
-            background: #ffb347;
-            font-size: 0.65rem;
-            border-radius: 20px;
-            padding: 2px 8px;
-            margin-left: 8px;
-        }
-        .feedback {
-            margin-top: 8px;
-            font-size: 0.8rem;
-        }
-        .correct-fb { color: #2b7a4b; }
-        .wrong-fb { color: #c7432e; }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
+        .hint-btn:hover:not(:disabled) { background: #ffe5b4; transform: translateY(-1px); }
+        .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        #hintStatusBar {
             display: flex;
             align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .name-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 2rem;
-            text-align: center;
-            max-width: 400px;
-        }
-        .hidden { display: none; }
-        .preview-notice {
-            background: #fff2df;
-            padding: 8px 16px;
-            border-radius: 28px;
+            gap: 10px;
+            background: #fff8ee;
+            border: 1px solid #ffd08a;
+            border-radius: 12px;
+            padding: 9px 16px;
             margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: #7a4400;
         }
+        .hint-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--amber);
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 1px 4px rgba(255,159,28,0.4);
+        }
+        .hint-dot.used {
+            background: #ddd;
+            box-shadow: none;
+        }
+        @keyframes hintDeduct {
+            0%   { transform: scale(1);    color: var(--error); }
+            40%  { transform: scale(1.15); }
+            100% { transform: scale(1);    color: inherit; }
+        }
+        .hint-deduct-anim { animation: hintDeduct 0.4s ease; }
+
+        /* ── Match ── */
+        .match-item {
+            background: var(--surface2);
+            margin-bottom: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+        .para-input {
+            width: 72px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            text-align: center;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .para-input:focus { border-color: var(--teal); }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--teal);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(46,196,182,0.25);
+        }
+        .btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn-gold {
+            background: var(--amber);
+            box-shadow: 0 2px 8px rgba(255,159,28,0.28);
+        }
+        .btn-gold:hover { background: #e88e10; }
+        .btn-muted { background: #7F9BAA; box-shadow: none; }
+        .btn-muted:hover { background: #6a8594; }
+
+        /* ── Feedback ── */
+        .feedback { margin-top: 8px; font-size: 0.82rem; line-height: 1.5; }
+        .correct-fb { color: var(--success); font-weight: 600; }
+        .wrong-fb   { color: var(--error);   font-weight: 600; }
+
+        /* ── Combo ── */
+        #comboBadge {
+            background: rgba(255,255,255,0.15);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s;
+        }
+        #comboBadge.active {
+            background: linear-gradient(135deg, #ff6b35, #ff9f1c);
+            border-color: transparent;
+            box-shadow: 0 2px 12px rgba(255,107,53,0.5);
+            animation: comboPulse 0.8s ease infinite alternate;
+        }
+        @keyframes comboPulse {
+            from { box-shadow: 0 2px 12px rgba(255,107,53,0.4); }
+            to   { box-shadow: 0 4px 20px rgba(255,107,53,0.8); transform: scale(1.04); }
+        }
+        .combo-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            background: linear-gradient(135deg, #ff6b35, #ff9f1c);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(255,107,53,0.5);
+            animation: toastIn 1.8s ease forwards;
+        }
+        @keyframes toastIn {
+            0%   { opacity:0; transform: translateX(-50%) scale(0.7) translateY(10px); }
+            20%  { opacity:1; transform: translateX(-50%) scale(1.05) translateY(0); }
+            70%  { opacity:1; transform: translateX(-50%) scale(1) translateY(0); }
+            100% { opacity:0; transform: translateX(-50%) scale(0.9) translateY(-10px); }
+        }
+        .fb-combo { color: #e07b20; font-weight: 700; font-size: 0.85rem; }
+
+        /* ── Preview notice ── */
+        .preview-notice {
+            background: var(--amber-light);
+            color: #7a4400;
+            padding: 9px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--amber);
+        }
+
+        /* ── Debate module ── */
         .ai-debate-module {
-            background: #eef3f0;
-            border-radius: 1.5rem;
-            padding: 1.2rem;
-            margin-top: 0rem;
-            border: 1px solid #cde2d6;
+            background: var(--surface2);
+            border-radius: 18px;
+            padding: 18px;
+            border: 1px solid var(--border);
         }
         .chat-window {
-            background: white;
-            border-radius: 1rem;
-            padding: 12px;
-            height: 320px;
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            height: 360px;
             overflow-y: auto;
-            margin-bottom: 12px;
-            border: 1px solid #ddd0b6;
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+        .chat-window::-webkit-scrollbar { width: 5px; }
+        .chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         .chat-message {
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            border-radius: 20px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            max-width: 88%;
+            word-break: break-word;
+            white-space: pre-wrap;
         }
         .user-msg {
-            background: #f7bc4533;
-            text-align: right;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            color: #fff;
+            align-self: flex-end;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 8px rgba(46,196,182,0.22);
         }
         .ai-msg {
-            background: #e6e9e8;
-            text-align: left;
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--text);
+            align-self: flex-start;
             border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
-        .api-config {
-            display: none;
+        #userDebateInput {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1.5px solid var(--border);
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+            background: #fff;
+            transition: border 0.2s;
+            line-height: 1.6;
+            word-break: break-word;
         }
-        .api-key-input, .proxy-input {
-            flex: 2;
-            padding: 8px;
-            border-radius: 40px;
-            border: 1px solid #ccc;
-            min-width: 180px;
-        }
-        .model-select {
-            padding: 8px;
-            border-radius: 40px;
+        #userDebateInput:focus { border-color: var(--teal); }
+        .debate-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
         }
         .evaluation-box {
-            background: #ffffffdd;
-            border-radius: 1rem;
-            padding: 12px;
+            background: linear-gradient(135deg, #fff9ec 0%, #fff 100%);
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-top: 18px;
+            border: 1.5px solid #f0d68b;
+            box-shadow: 0 4px 16px rgba(224,123,32,0.08);
+            font-size: 0.92rem;
+            line-height: 1.85;
+            word-break: break-word;
+            color: #3a3a3a;
+        }
+        .eval-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #b86e1a;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1.5px dashed #f0d68b;
+        }
+        .eval-content strong {
+            color: var(--teal-dark);
+            font-weight: 700;
+        }
+        .eval-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #e07b20, #f0a04b);
+            color: #fff !important;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 700 !important;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(224,123,32,0.3);
+        }
+
+        /* ── 辩论进度条 ── */
+        .debate-progress {
+            background: var(--teal-light);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            border: 1px solid #c8e6e3;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            margin-bottom: 6px;
+        }
+        .progress-label { color: var(--teal-dark); font-weight: 700; }
+        .progress-text { color: var(--text-muted); font-weight: 600; }
+        .progress-bar {
+            height: 8px;
+            background: #d4ece9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--teal), var(--teal-dark));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .progress-fill.full {
+            background: linear-gradient(90deg, #e07b20, #f0a04b);
+        }
+        .progress-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* ── 实时教练提示 ── */
+        .coach-tip {
+            background: linear-gradient(135deg, #fff9ec, #fff);
+            border-left: 4px solid #f0a04b;
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #6b3a11;
+            line-height: 1.6;
+            animation: tipSlideIn 0.4s ease;
+            box-shadow: 0 2px 10px rgba(224,123,32,0.08);
+        }
+        .coach-tip-title {
+            font-weight: 700;
+            color: #b86e1a;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        @keyframes tipSlideIn {
+            from { transform: translateY(-8px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ── 关键词点亮徽章 ── */
+        .keyword-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #2ec4b6, #1d8a7e);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-left: 6px;
+            animation: keywordPop 0.5s ease;
+            box-shadow: 0 2px 8px rgba(46,196,182,0.3);
+        }
+        @keyframes keywordPop {
+            0%   { transform: scale(0); opacity: 0; }
+            50%  { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* ── 课文浮动按钮 + 弹窗 ── */
+        .article-fab {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: #fff;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(46,196,182,0.4);
+            z-index: 1500;
+            transition: transform 0.2s;
+        }
+        .article-fab:hover { transform: scale(1.08); }
+        .article-modal {
+            position: fixed; inset: 0;
+            background: rgba(10,30,40,0.7);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2500;
+            animation: fadeIn 0.25s ease;
+        }
+        .article-card {
+            background: #fff;
+            border-radius: 18px;
+            width: 92%;
+            max-width: 720px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+        .article-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .article-title { font-weight: 700; font-size: 1rem; }
+        .article-close {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .article-close:hover { background: rgba(255,255,255,0.4); }
+        .article-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            font-size: 0.92rem;
+            line-height: 1.85;
+            color: #2a3d3a;
+        }
+        .article-body .para {
+            margin-bottom: 14px;
+            padding-left: 12px;
+            border-left: 3px solid #d4ece9;
+        }
+        .article-body .para-num {
+            font-weight: 700;
+            color: var(--teal-dark);
+            margin-right: 6px;
+        }
+
+        /* ── 重新挑战卡 ── */
+        .replay-card {
             margin-top: 16px;
-            border-left: 4px solid #f7bc45;
+            background: linear-gradient(135deg, #f0fbff, #fff);
+            border: 1.5px dashed var(--teal);
+            border-radius: 14px;
+            padding: 16px 18px;
+            text-align: center;
+        }
+        .replay-card-title {
+            font-weight: 700;
+            color: var(--teal-dark);
+            margin-bottom: 6px;
+        }
+        .replay-card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .replay-btn {
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(46,196,182,0.3);
+            transition: transform 0.15s;
+        }
+        .replay-btn:hover { transform: translateY(-2px); }
+
+        /* ── API config (hidden) ── */
+        .api-config { display: none; }
+        .api-key-input, .proxy-input { flex: 2; padding: 8px; border-radius: 10px; border: 1px solid var(--border); min-width: 180px; }
+        .model-select { padding: 8px; border-radius: 10px; }
+
+        /* ── Modal ── */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10,30,40,0.7);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .name-card {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+        .name-card h2 { font-size: 1.3rem; color: var(--teal-dark); margin-bottom: 8px; }
+        .name-card p  { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px; }
+        #studentName {
+            width: 100%;
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+            margin-bottom: 14px;
+        }
+        #studentName:focus { border-color: var(--teal); }
+        .hidden { display: none; }
+
+        /* ── Animations ── */
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-8px); }
+            40%      { transform: translateX(8px); }
+            60%      { transform: translateX(-5px); }
+            80%      { transform: translateX(5px); }
+        }
+        @keyframes pop-correct {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        .anim-wrong   { animation: shake 0.4s ease; border-color: var(--error) !important; background: #fff5f5 !important; }
+        .anim-correct { animation: pop-correct 0.35s ease; border-color: var(--success) !important; background: #f0fff6 !important; }
+
+        /* ── Story cutscene modal ── */
+        .cutscene-overlay {
+            position: fixed; inset: 0;
+            background: rgba(10,30,40,0.75);
+            backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .cutscene-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.2rem 2rem 1.8rem;
+            max-width: 440px;
+            width: 92%;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+            text-align: center;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity:0; }
+            to   { transform: translateY(0);    opacity:1; }
+        }
+        .cutscene-emoji { font-size: 3rem; margin-bottom: 12px; }
+        .cutscene-title { font-size: 1.2rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 10px; }
+        .cutscene-body  { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+        .cutscene-quote {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #1a3a38;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .cutscene-btn {
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 36px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(46,196,182,0.35);
+            transition: transform 0.15s;
+        }
+        .cutscene-btn:hover { transform: translateY(-2px); }
+        .score-summary {
+            background: #f4fbfa;
+            border: 1.5px solid var(--teal-light);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin: 0 0 18px;
+            text-align: left;
+        }
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            padding: 4px 0;
+        }
+        .score-val { font-weight: 700; color: var(--teal-dark); }
+        .bonus-row { color: #e07b20; }
+        .bonus-val { color: #e07b20 !important; }
+        .deduct-row { color: #c7432e; }
+        .deduct-val { color: #c7432e !important; }
+        .total-row { font-size: 0.95rem; font-weight: 700; color: var(--teal-dark); }
+        .total-row .score-val { font-size: 1.05rem; }
+        .score-divider {
+            border-top: 1.5px dashed #c8e6e3;
+            margin: 8px 0 4px;
+        }
+
+        /* ── Stance selector ── */
+        .stance-selector {
+            display: flex;
+            gap: 16px;
+            margin: 18px 0 8px;
+            flex-wrap: wrap;
+        }
+        .stance-card {
+            flex: 1;
+            min-width: 140px;
+            border: 2.5px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--surface2);
+        }
+        .stance-card:hover { border-color: var(--teal); box-shadow: var(--shadow); }
+        .stance-card.selected {
+            border-color: var(--teal);
+            background: var(--teal-light);
+            box-shadow: 0 0 0 3px rgba(46,196,182,0.2);
+        }
+        .stance-card .stance-icon { font-size: 2.2rem; margin-bottom: 8px; }
+        .stance-card .stance-label { font-weight: 700; font-size: 0.95rem; color: var(--teal-dark); }
+        .stance-card .stance-desc  { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+        #startDebateBtn {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            padding: 13px;
+            font-size: 0.95rem;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -248,9 +779,13 @@
 <div id="gameRoot" style="display: none;">
 <div class="game-container">
     <div class="story-header">
-        <div><span style="font-size:1.4rem;">🎓 小李的毕业季</span><br><span style="font-size:0.7rem;">Spend or Save? 财务抉择之路 | AI Debate in English</span></div>
-        <div class="student-info">👤 <span id="displayName">-</span> <button id="editNameBtn" style="background:none;border:1px solid #f7bc45;border-radius:20px;padding:2px 8px;">✎ 修改</button></div>
-        <div class="score-board">🏆 得分: <span id="totalScore">0</span> / 70</div>
+        <div>
+            <div class="header-title">🎓 小李的毕业季</div>
+            <div class="header-subtitle">Spend or Save? 财务抉择之路 &nbsp;·&nbsp; AI Debate in English</div>
+        </div>
+        <div class="student-info">👤 <span id="displayName">-</span> <button id="editNameBtn">✎ 修改</button></div>
+        <div id="comboBadge">🔥 <span id="comboCount">0</span> 连击</div>
+        <div class="score-board">🏆 <span id="totalScore">0</span> / 100 <span id="bonusDisplay" style="display:none;font-size:0.78rem;background:rgba(255,255,255,0.25);border-radius:20px;padding:2px 8px;margin-left:4px;">+<span id="bonusScore">0</span> 🔥</span></div>
     </div>
     <div class="level-tabs" id="levelTabs">
         <div class="level-tab active" data-lvl="1">📖 第一幕 · 词汇大师</div>
@@ -261,6 +796,13 @@
     <!-- 第一关：词汇 -->
     <div id="panel1" class="panel active-panel">
         <div class="story-card">📖 剧情：小李即将毕业，他常陷入“花钱还是存钱”的矛盾。先帮他掌握课文中的关键概念。根据英文释义写出对应单词（提示会展示课文原句填空）。</div>
+        <div id="hintStatusBar">
+            💡 课文提示次数：
+            <span class="hint-dot" id="hd0"></span>
+            <span class="hint-dot" id="hd1"></span>
+            <span class="hint-dot" id="hd2"></span>
+            <span style="margin-left:4px;">剩余 <strong id="hintLeft">3</strong> 次 &nbsp;·&nbsp; 每次使用 <span style="color:var(--error);font-weight:700;">-1 分</span></span>
+        </div>
         <div id="vocabContainer"></div>
         <button id="submitL1" class="btn btn-gold">✨ 提交第一幕 · 解锁侦探关</button>
         <div id="l1Feedback" class="feedback" style="margin-top:16px;"></div>
@@ -275,47 +817,91 @@
         <div id="l2Feedback" class="feedback"></div>
     </div>
 
-    <!-- 第三关：AI英文辩论（带代理/API配置） -->
+    <!-- Act 3: AI Debate -->
     <div id="panel3" class="panel">
-        <div class="story-card">💬 剧情：小李终于把课文读明白了，但他还想听听你的真实观点。现在，你与AI辩论助教展开一场关于“大学生该花钱还是该存钱”的**英文对话**。AI会引用课文反驳你。<br>⚠️ 要求：请使用英文发言。AI将全程使用英文回复。</div>
+        <div class="story-card">&#x1F4AC; &#x5267;&#x60C5;&#xFF1A;&#x5C0F;&#x674E;&#x7EC8;&#x4E8E;&#x628A;&#x8BFE;&#x6587;&#x8BFB;&#x660E;&#x767D;&#x4E86;&#xFF0C;&#x4F46;&#x4ED6;&#x8FD8;&#x60F3;&#x542C;&#x542C;&#x4F60;&#x7684;&#x771F;&#x5B9E;&#x89C2;&#x70B9;&#x3002;&#x9009;&#x5B9A;&#x4F60;&#x7684;&#x7ACB;&#x573A;&#xFF0C;&#x4E0E;AI&#x8FA9;&#x8BBA;&#x52A9;&#x6559;&#x5C55;&#x5F00;&#x82F1;&#x6587;&#x5BF9;&#x8BDD;&#x2014;&#x2014;AI&#x4F1A;&#x5F15;&#x7528;&#x8BFE;&#x6587;&#x53CD;&#x9A73;&#x4F60;&#x3002;<br>&#x26A0;&#xFE0F; &#x8981;&#x6C42;&#xFF1A;&#x8BF7;&#x4F7F;&#x7528;&#x82F1;&#x6587;&#x53D1;&#x8A00;&#xFF0C;AI&#x5C06;&#x5168;&#x7A0B;&#x4F7F;&#x7528;&#x82F1;&#x6587;&#x56DE;&#x590D;&#x3002;</div>
         <div id="previewNotice3" class="preview-notice hidden"></div>
-        <div class="ai-debate-module">
+
+        <div id="stanceSelector" class="ai-debate-module">
+            <div style="font-weight:700;font-size:1rem;color:var(--teal-dark);margin-bottom:6px;">&#x2694;&#xFE0F; &#x9009;&#x62E9;&#x4F60;&#x7684;&#x8FA9;&#x8BBA;&#x7ACB;&#x573A;</div>
+            <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">AI &#x5C06;&#x81EA;&#x52A8;&#x7AD9;&#x5728;&#x5BF9;&#x7ACB;&#x9762;&#xFF0C;&#x5F15;&#x7528;&#x8BFE;&#x6587;&#x53CD;&#x9A73;&#x4F60;&#x7684;&#x6BCF;&#x4E00;&#x4E2A;&#x8BBA;&#x70B9;</div>
+            <div class="stance-selector">
+                <div class="stance-card" data-stance="spend" onclick="selectStance(this)">
+                    <div class="stance-icon">&#x1F4B8;</div>
+                    <div class="stance-label">I support SPENDING</div>
+                    <div class="stance-desc">&#x82B1;&#x9322;&#x624D;&#x80FD;&#x4EAB;&#x53D7;&#x5927;&#x5B66;&#x751F;&#x6D3B;&#xFF0C;&#x6295;&#x8D44;&#x4F53;&#x9A8C;&#x4E0E;&#x6210;&#x957F;</div>
+                </div>
+                <div class="stance-card" data-stance="save" onclick="selectStance(this)">
+                    <div class="stance-icon">&#x1F3E6;</div>
+                    <div class="stance-label">I support SAVING</div>
+                    <div class="stance-desc">&#x5B58;&#x9322;&#x624D;&#x80FD;&#x5EFA;&#x7ACB;&#x8D22;&#x52A1;&#x5B89;&#x5168;&#x611F;&#xFF0C;&#x907F;&#x514D;&#x6BD5;&#x4E1A;&#x5373;&#x8D1F;&#x503A;</div>
+                </div>
+            </div>
+            <button id="startDebateBtn" class="btn btn-gold" onclick="beginDebate()">&#x26A1; &#x786E;&#x8BA4;&#x7ACB;&#x573A;&#xFF0C;&#x5F00;&#x59CB;&#x8FA9;&#x8BBA;&#xFF01;</button>
+        </div>
+
+        <div id="debateMain" class="ai-debate-module hidden" style="margin-top:16px;">
             <div class="api-config">
-                <input type="text" id="proxyUrlInput" class="proxy-input" value="https://english-tournament.netlify.app/.netlify/functions/debate">
+                <input type="text" id="proxyUrlInput" class="proxy-input" value="https://englishtournamentgame.netlify.app/.netlify/functions/debate">
                 <input type="text" id="apiKeyInput" class="api-key-input" value="">
                 <select id="modelSelect" class="model-select">
-                    <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
                     <option value="deepseek-chat">deepseek-chat</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
                     <option value="gpt-4o-mini">GPT-4o-mini</option>
                 </select>
-                <button id="clearChatBtn" class="btn" style="background:#6c757d; padding:6px 16px;">清空对话</button>
             </div>
-            <div class="chat-window" id="chatWindow">
-                <div class="chat-message ai-msg">🤖 AI: Hello! I'm your debate opponent. You can choose to support "spending first" or "saving first". I will argue the opposite and cite the article. Please use English. Let's begin!</div>
+            <div id="stanceBadge" style="font-size:0.82rem;margin-bottom:10px;font-weight:600;"></div>
+            <div class="debate-progress">
+                <div class="progress-info">
+                    <span class="progress-label">💬 辩论进度</span>
+                    <span class="progress-text"><span id="debateRoundCount">0</span> / 6 轮</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="debateProgressFill" style="width:0%"></div></div>
+                <div class="progress-hint" id="debateProgressHint">建议至少完成 4 轮辩论再申请评价，效果更佳。</div>
             </div>
-            <textarea id="userDebateInput" rows="2" placeholder="Type your argument in English... (e.g., I think students should spend moderately because... )"></textarea>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;">
-                <button id="sendDebateBtn" class="btn btn-gold">⚡ Send & Debate</button>
-                <button id="switchStanceBtn" class="btn" style="background:#5f7f6e;">🔄 Switch AI Stance (current: opposing you)</button>
-                <button id="evaluateDebateBtn" class="btn" style="background:#d98c2b;">🏁 End Debate & Get Evaluation</button>
+            <div class="chat-window" id="chatWindow"></div>
+            <div id="coachTip" class="coach-tip hidden"></div>
+            <textarea id="userDebateInput" rows="2" placeholder="Type your argument in English..."></textarea>
+            <div class="debate-actions">
+                <button id="sendDebateBtn" class="btn btn-gold">&#x26A1; Send &amp; Debate</button>
+                <button id="evaluateDebateBtn" class="btn" style="background:#e07b20;">&#x1F3C1; End &amp; Evaluate</button>
+                <button id="clearChatBtn" class="btn btn-muted" style="background:#9aacb5;">&#x1F504; &#x91CD;&#x65B0;&#x9009;&#x62E9;&#x7ACB;&#x573A;</button>
             </div>
             <div id="debateStatus" class="feedback" style="margin-top:6px;"></div>
             <div id="evaluationResult" class="evaluation-box hidden"></div>
         </div>
-        <button id="submitAllDataBtn" class="btn btn-gold" style="margin-top: 20px;">📤 提交全部闯关数据 (含辩论记录)</button>
+
+        <div id="debateScoreHint" style="margin-top:16px;background:var(--teal-light);border-radius:12px;padding:10px 16px;font-size:0.85rem;color:#1a3a38;border-left:4px solid var(--teal);">
+            &#x1F4AC; &#x8FA9;&#x8BBA;&#x5F97;&#x5206;&#xFF1A;<strong><span id="l3ScoreDisplay">0</span> / 30 &#x5206;</strong>&#xFF08;&#x6BCF;&#x53D1;&#x8A00; 1 &#x8F6E; +5 &#x5206;&#xFF0C;&#x6700;&#x591A; 6 &#x8F6E;&#x6EE1;&#x5206;&#xFF09;
+        </div>
+        <button id="submitAllDataBtn" class="btn btn-gold" style="margin-top:14px;width:100%;justify-content:center;font-size:0.95rem;padding:13px;">&#x1F4E4; &#x63D0;&#x4EA4;&#x5168;&#x90E8;&#x95EF;&#x5173;&#x6570;&#x636E;&#xFF08;&#x542B;&#x8FA9;&#x8BBA;&#x8BB0;&#x5F55;&#xFF09;</button>
         <div id="submitApiStatus" class="feedback"></div>
     </div>
 </div>
 </div>
 
+<!-- 一键查看课文浮动按钮 -->
+<button id="articleFab" class="article-fab hidden" title="查看课文">📖</button>
+
+<!-- 课文查看弹窗 -->
+<div id="articleModal" class="article-modal hidden">
+    <div class="article-card">
+        <div class="article-header">
+            <div class="article-title">📖 Spend or save – the student's dilemma</div>
+            <button id="closeArticleBtn" class="article-close">✕</button>
+        </div>
+        <div class="article-body" id="articleBody"></div>
+    </div>
+</div>
+
 <!-- 姓名模态框 -->
 <div id="nameModal" class="modal">
     <div class="name-card">
-        <h2>🎭 进入小李的财务世界</h2>
-        <p>请填写你的姓名或学号</p>
-        <input type="text" id="studentName" placeholder="例: 李明 / 20240001" style="width:100%; padding:10px; margin:15px 0;">
-        <button id="confirmName" class="btn">开始闯关</button>
-        <div id="nameError" style="color:red; font-size:0.8rem;"></div>
+        <h2>🎓 进入小李的财务世界</h2>
+        <p>请填写你的姓名或学号，开始闯关</p>
+        <input type="text" id="studentName" placeholder="例: 李明 / 20240001">
+        <button id="confirmName" class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;">🚀 开始闯关</button>
+        <div id="nameError" style="color:var(--error); font-size:0.82rem; margin-top:8px;"></div>
     </div>
 </div>
 
@@ -354,17 +940,318 @@
     let student = "";
     let vocabAnswers = new Array(10).fill('');
     let matchAnswers = new Array(matchStatements.length).fill('');
-    let debateHistory = [];   // {role, content}
-    let scores = { l1: 0, l2: 0 };
+    let debateHistory = [];
+    let scores = { l1: 0, l2: 0, l3: 0 };
+    let comboBonus = 0; // 连击额外奖励分（最多+10，独立于100分之外）
     let unlocked = { l2: false, l3: false };
     let previewMode = { l2: false, l3: false };
     let activeLevel = 1;
+    let currentCombo = 0;
+    let maxCombo = 0;
+    let hintsUsed = 0;
+    const MAX_HINTS = 3;
+
+    function updateHintUI() {
+        const left = Math.max(0, MAX_HINTS - hintsUsed);
+        const el = document.getElementById('hintLeft');
+        if (el) el.textContent = left;
+        for (let i = 0; i < MAX_HINTS; i++) {
+            const dot = document.getElementById(`hd${i}`);
+            if (dot) dot.classList.toggle('used', i >= left);
+        }
+        // 用完后禁用所有提示按钮
+        if (left === 0) {
+            document.querySelectorAll('.hint-btn').forEach(b => {
+                b.disabled = true;
+                b.textContent = '📖 提示已用完';
+            });
+        }
+    }
+
+    function showComboToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'combo-toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 1900);
+    }
+    function updateComboBadge(n) {
+        currentCombo = n;
+        if (n > maxCombo) maxCombo = n;
+        const badge = document.getElementById('comboBadge');
+        const countEl = document.getElementById('comboCount');
+        if (n > 0) {
+            badge.style.display = 'inline-flex';
+            countEl.textContent = n;
+            badge.classList.toggle('active', n >= 3);
+        } else {
+            badge.style.display = 'none';
+            badge.classList.remove('active');
+        }
+    }
 
     const API_URL_SUBMIT = "https://quickform.cn/api/cm4prjlqpl";
 
     // AI辩论配置
-    let aiStance = "con";   // "pro" 支持消费, "con" 支持储蓄
-    const systemPromptEnglish = `You are a strict debate opponent on the topic: "Should college students prioritize spending or saving?" You must argue based on the article "Spend or save – the student's dilemma". If the student supports spending, you argue for saving; if the student supports saving, you argue for spending. Keep each response under 150 words, be polite but sharp, and cite paragraphs (e.g., para.1, para.5). Always reply in English.`;
+    let aiStance = "con";
+    let studentStance = "save"; // 学生选择的立场
+    const systemPromptEnglish = `You are a strict debate opponent on the topic: "Should college students prioritize spending or saving?" The debate is based ONLY on the following article. You MUST only cite quotes and ideas that actually appear in the article below. NEVER invent or paraphrase quotes that are not in the article. If you want to cite, use the exact wording from the article and specify the paragraph number.
+
+=== ARTICLE: Spend or save – the student's dilemma ===
+Para.1: If living in the U.S., do you feel as confused and manipulated as I do with this question, "Should I spend or should I save?" I think that the messages we get from our environment seem to defy common sense and contradict each other. The government tells us to spend or we'll never get out of the recession. At the same time, we are encouraged to save more, or our country will be in grave danger. Banks offer higher interest rates so we increase savings. Then the same banks send us credit card offers so we can spend more.
+Para.2: Here's another familiar example. If we don't pay our credit card bill on time, we get demanding emails from the credit card company saying something like, "Your failure to pay is unacceptable. Make sure you pay immediately or a further penalty will apply." Then, as soon as we pay, we get a follow-up email in a charming tone telling us how valuable a customer we are and encouraging us to resume spending. Which depiction is correct, a failing consumer or a valued customer? The gap between these two messages is enormous.
+Para.3: The paradox is that every day we get two sets of messages at odds with each other. One is the "permissive" perspective, "Buy, spend, and get it now. You need this!" The other, which we could call an "upright" message, urges us, "Work hard and save. Suspend your desires. Avoid luxuries. Control your appetite for more than you truly need." This message comes to us from many sources: from school, from parents, and even from political figures who like to refer to the traditional values – hard work, family loyalty, and the capacity to postpone desires.
+Para.4: But the opposite message, advertising's permissive message that pushes us to spend, spend, spend, is also inescapable. Though sometimes disguised, the message is everywhere we look: on TV, in movies, on printed media and road signs, in stores, and on buses, trains and subways. Advertisements invade our daily lives. We are constantly surrounded by the message. Someone recently said, "The only time you can escape advertising is when you're in your bed asleep!"
+Para.5: Each advertisement is doing its utmost to influence our diverse buying decisions, from the breakfast cereal we eat to which cruise line we will use for our vacation. There is no shortage of ideas and things to buy! Now, of course, we don't remember exactly what the products were, but the essential message is cemented into our consciousness, "It's good to satisfy your desires. You should have what you want. You deserve the best. So, you should buy it – now!" A famous advertisement said it perfectly, "I love me. I'm a good friend to myself. I do what makes me feel good. I used to put things off. Not anymore. Today I'll buy new ski equipment, look at new compact cars, and buy that camera I've always wanted. I live my dreams today, not tomorrow."
+Para.6: What happens as we take in these contradictory but explicit messages? What are the psychological and social consequences of this campaign to control our spending habits? On one hand, we want more things because we want to satisfy our material appetite. On the other hand, a little voice inside us echoes those upright messages: "Watch out, take stock of your life, and don't let your attention get scattered. Postpone your desires. Don't fall into debt. Wait! Retain control over your own life and it will make you stronger."
+Para.7: Anyway, many of the skills you need as a successful student can be applied to your finances. Consider your financial well-being as a key ingredient of your university education as money worries are extremely stressful and distracting. They can make you feel terrible and hinder your ability to focus on your prime objective: successfully completing your education.
+Para.8: How can you be a smart and educated consumer? Many schools, community organizations, and even some banks offer financial literacy classes. Consider consulting with your school's financial aid office or seeking input from your parents or other respected adults in setting up a budget. An additional option is finding a partner to help you stay on track and find pleasure in the administration of your own financial affairs. Most importantly, if you find yourself getting into financial trouble, don't let your ego get in your way; urgently get help with tackling your problem before it spins out of control and lands you in legal troubles.
+Para.9: All this will help you become an educated consumer and saver. As you learn to balance spending and saving, you will become the captain of your own ship, steering your life in a successful and productive direction through the choppy waters.
+=== END OF ARTICLE ===
+
+Rules:
+- If the student supports spending, you argue for saving; if the student supports saving, you argue for spending.
+- IMPORTANT: Keep each response SHORT — strictly between 40 and 70 words. NEVER exceed 70 words.
+- Make exactly ONE main point per response. Do not stack multiple arguments.
+- Use simple, classroom-friendly English. Avoid long sentences.
+- Cite ONE short quote (max 10 words) from the article, with paragraph number (e.g., para.7: "...").
+- End with a short, focused question to push the student to respond (e.g., "But what about...?").
+- Be polite, encouraging, and never overwhelming. This is a learning conversation, not a lecture.
+- Only cite passages that genuinely exist in the article above. Quote exactly.
+- Always reply in English.`;
+
+    // ── 提示弹窗 ──
+    function showHintPopup(hintText) {
+        const existing = document.getElementById('hintPopup');
+        if (existing) existing.remove();
+        const el = document.createElement('div');
+        el.id = 'hintPopup';
+        el.style.cssText = `
+            position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+            background:#fff; border:2px solid var(--amber); border-radius:16px;
+            padding:14px 22px; max-width:420px; width:90%; z-index:3000;
+            box-shadow:0 8px 28px rgba(255,159,28,0.3);
+            animation:slideUp 0.25s ease;
+            font-size:0.88rem; color:var(--text); line-height:1.6;
+        `;
+        el.innerHTML = `<div style="font-weight:700;color:#b35c00;margin-bottom:6px;">📖 课文提示 <span style="color:var(--error);font-size:0.8rem;">(-1分已扣除)</span></div>
+            <div>${hintText}</div>
+            <div style="text-align:right;margin-top:10px;">
+                <button onclick="document.getElementById('hintPopup').remove()"
+                    style="background:var(--amber);border:none;border-radius:8px;padding:5px 16px;color:#fff;font-weight:600;cursor:pointer;">
+                    知道了
+                </button>
+            </div>`;
+        document.body.appendChild(el);
+        setTimeout(() => { if (el.parentNode) el.remove(); }, 8000);
+    }
+
+    // ── 剧情卡弹窗 ──
+    function showCutscene(cfg, onClose) {
+        const overlay = document.createElement('div');
+        overlay.className = 'cutscene-overlay';
+        const scoreHtml = cfg.scoreBlock ? cfg.scoreBlock : '';
+        overlay.innerHTML = `
+            <div class="cutscene-card">
+                <div class="cutscene-emoji">${cfg.emoji}</div>
+                <div class="cutscene-title">${cfg.title}</div>
+                ${scoreHtml}
+                <div class="cutscene-body">${cfg.body}</div>
+                <div class="cutscene-quote">${cfg.quote}</div>
+                <button class="cutscene-btn">${cfg.btn}</button>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('.cutscene-btn').addEventListener('click', () => {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.2s';
+            setTimeout(() => { overlay.remove(); if (onClose) onClose(); }, 200);
+        });
+    }
+
+    // ── 答对/错动画 ──
+    function flashRow(el, correct) {
+        el.classList.remove('anim-correct', 'anim-wrong');
+        void el.offsetWidth; // reflow
+        el.classList.add(correct ? 'anim-correct' : 'anim-wrong');
+        setTimeout(() => el.classList.remove('anim-correct', 'anim-wrong'), 600);
+    }
+
+    // ── 立场选择 ──
+    function selectStance(card) {
+        document.querySelectorAll('.stance-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        studentStance = card.dataset.stance;
+        const btn = document.getElementById('startDebateBtn');
+        btn.style.display = 'inline-flex';
+    }
+    function beginDebate() {
+        if (!studentStance) return;
+        aiStance = studentStance === 'spend' ? 'con' : 'pro';
+        document.getElementById('stanceSelector').classList.add('hidden');
+        const main = document.getElementById('debateMain');
+        main.classList.remove('hidden');
+        const badge = document.getElementById('stanceBadge');
+        const stanceLabel = studentStance === 'spend' ? '💸 I support SPENDING' : '🏦 I support SAVING';
+        const aiLabel = aiStance === 'pro' ? 'pro-spending' : 'pro-saving';
+        badge.innerHTML = `<span style="color:var(--teal-dark);">Your stance: ${stanceLabel}</span> &nbsp;|&nbsp; <span style="color:#e07b20;">AI stance: ${aiLabel}</span>`;
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.innerHTML = '';
+        const opening = studentStance === 'spend'
+            ? `You've chosen to support SPENDING. Bold choice! I'll be arguing for saving — let's see if you can change my mind. Cite the article if you can. Begin!`
+            : `You've chosen to support SAVING. A wise stance! I'll argue for spending — and I'll have plenty of ammunition from the article. Convince me otherwise. Begin!`;
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'chat-message ai-msg';
+        aiDiv.innerHTML = `<strong>🤖 AI (${aiLabel}):</strong> ${opening}`;
+        chatWindow.appendChild(aiDiv);
+        // 显示课文浮动按钮
+        document.getElementById('articleFab').classList.remove('hidden');
+        // 重置进度条
+        updateDebateProgress();
+        // 隐藏旧的教练提示和评价
+        document.getElementById('coachTip').classList.add('hidden');
+        document.getElementById('evaluationResult').classList.add('hidden');
+    }
+
+    // ── 辩论轮数进度条 ──
+    function updateDebateProgress() {
+        const userTurns = debateHistory.filter(m => m.role === 'user').length;
+        const target = 6;
+        const pct = Math.min(100, (userTurns / target) * 100);
+        const fill = document.getElementById('debateProgressFill');
+        const text = document.getElementById('debateRoundCount');
+        const hint = document.getElementById('debateProgressHint');
+        if (text) text.textContent = userTurns;
+        if (fill) {
+            fill.style.width = pct + '%';
+            fill.classList.toggle('full', userTurns >= 4);
+        }
+        if (hint) {
+            if (userTurns === 0) hint.textContent = '建议至少完成 4 轮辩论再申请评价，效果更佳。';
+            else if (userTurns < 4) hint.textContent = `还差 ${4 - userTurns} 轮达到推荐评价线，加油！`;
+            else if (userTurns < 6) hint.textContent = `✅ 已达到推荐评价线，继续辩论可获更高分！(${userTurns}/6 轮)`;
+            else hint.textContent = '🏆 已达到满分轮数！可以申请评价了。';
+        }
+    }
+
+    // ── 实时教练提示池 ──
+    const coachTipsForSpend = [
+        { title: '💡 试试反问', text: '你可以反问 AI："那 para.6 描述的内心冲突 (a little voice echoes upright messages) 你怎么解释？"' },
+        { title: '💡 引用 para.5 强化攻击', text: '试着引用 para.5："I deserve the best. So, you should buy it – now!"——证明 AI 立场的偏激。' },
+        { title: '💡 用 para.4 反击 AI', text: '提一句 "advertising is inescapable" (para.4) ——说明完全克制消费不现实。' },
+        { title: '💡 切换角度', text: '可以从"大学生体验"切到"投资自己" 角度：para.7 也提到 financial well-being 是教育的一部分。' },
+    ];
+    const coachTipsForSave = [
+        { title: '💡 引用 para.7', text: '试试引用 para.7："money worries are extremely stressful and distracting" 来支撑你的观点。' },
+        { title: '💡 用 para.6 反击', text: 'para.6 提到："Don\'t fall into debt. Wait!" ——说明节制是有道理的。' },
+        { title: '💡 提 captain 比喻', text: '别忘了 para.9 的精彩比喻："become the captain of your own ship"——能存能花才是掌舵人。' },
+        { title: '💡 用 para.3 拆 AI', text: 'para.3 描述 upright message："Suspend your desires. Avoid luxuries"——这正是支持你立场的核心论据。' },
+    ];
+    const coachTipsGeneric = [
+        { title: '💡 加一句反问', text: '辩论里反问最有力。试着以 "But what about..." 或 "How would you explain..." 开头。' },
+        { title: '💡 引用要更精确', text: '引用课文时直接说出段落号和原句的关键词，比如 "As para.X says, ..."。' },
+        { title: '💡 控制句长', text: '一次只攻一个点。先承认对方一个合理之处，再用课文反击。' },
+    ];
+
+    function showCoachTip() {
+        const userTurns = debateHistory.filter(m => m.role === 'user').length;
+        if (userTurns === 0) return;
+        // 50% 概率给立场专属，50% 通用
+        const pool = Math.random() > 0.5
+            ? (studentStance === 'spend' ? coachTipsForSpend : coachTipsForSave)
+            : coachTipsGeneric;
+        const tip = pool[Math.floor(Math.random() * pool.length)];
+        const el = document.getElementById('coachTip');
+        if (!el) return;
+        el.innerHTML = `<div class="coach-tip-title">${tip.title}</div><div>${tip.text}</div>`;
+        el.classList.remove('hidden');
+    }
+
+    // ── 关键词检测（学生发言用到课文核心词，奖励 +1 bonus） ──
+    const ARTICLE_KEYWORDS = [
+        'recession','permissive','upright','postpone','captain','budget','literacy',
+        'paradox','contradict','manipulat','consume','consumer','desire','luxur',
+        'debt','appetite','self-control','well-being','inescapable','cement',
+        'penalty','financial','advertis','restraint','suspend'
+    ];
+    let usedKeywords = new Set(); // 已经奖励过的关键词，避免重复加分
+
+    function detectKeywords(text) {
+        const lower = text.toLowerCase();
+        const hits = [];
+        ARTICLE_KEYWORDS.forEach(kw => {
+            if (lower.includes(kw) && !usedKeywords.has(kw)) {
+                hits.push(kw);
+                usedKeywords.add(kw);
+            }
+        });
+        return hits;
+    }
+
+    // ── 课文弹窗 ──
+    const ARTICLE_PARAS = [
+        'If living in the U.S., do you feel as confused and manipulated as I do with this question, "Should I spend or should I save?" I think that the messages we get from our environment seem to defy common sense and contradict each other. The government tells us to spend or we\'ll never get out of the recession. At the same time, we are encouraged to save more, or our country will be in grave danger. Banks offer higher interest rates so we increase savings. Then the same banks send us credit card offers so we can spend more.',
+        'Here\'s another familiar example. If we don\'t pay our credit card bill on time, we get demanding emails from the credit card company saying something like, "Your failure to pay is unacceptable. Make sure you pay immediately or a further penalty will apply." Then, as soon as we pay, we get a follow-up email in a charming tone telling us how valuable a customer we are and encouraging us to resume spending. Which depiction is correct, a failing consumer or a valued customer? The gap between these two messages is enormous.',
+        'The paradox is that every day we get two sets of messages at odds with each other. One is the "permissive" perspective, "Buy, spend, and get it now. You need this!" The other, which we could call an "upright" message, urges us, "Work hard and save. Suspend your desires. Avoid luxuries. Control your appetite for more than you truly need." This message comes to us from many sources: from school, from parents, and even from political figures who like to refer to the traditional values – hard work, family loyalty, and the capacity to postpone desires.',
+        'But the opposite message, advertising\'s permissive message that pushes us to spend, spend, spend, is also inescapable. Though sometimes disguised, the message is everywhere we look: on TV, in movies, on printed media and road signs, in stores, and on buses, trains and subways. Advertisements invade our daily lives. We are constantly surrounded by the message. Someone recently said, "The only time you can escape advertising is when you\'re in your bed asleep!"',
+        'Each advertisement is doing its utmost to influence our diverse buying decisions, from the breakfast cereal we eat to which cruise line we will use for our vacation. There is no shortage of ideas and things to buy! Now, of course, we don\'t remember exactly what the products were, but the essential message is cemented into our consciousness, "It\'s good to satisfy your desires. You should have what you want. You deserve the best. So, you should buy it – now!" A famous advertisement said it perfectly, "I love me. I\'m a good friend to myself. I do what makes me feel good. I used to put things off. Not anymore. Today I\'ll buy new ski equipment, look at new compact cars, and buy that camera I\'ve always wanted. I live my dreams today, not tomorrow."',
+        'What happens as we take in these contradictory but explicit messages? What are the psychological and social consequences of this campaign to control our spending habits? On one hand, we want more things because we want to satisfy our material appetite. On the other hand, a little voice inside us echoes those upright messages: "Watch out, take stock of your life, and don\'t let your attention get scattered. Postpone your desires. Don\'t fall into debt. Wait! Retain control over your own life and it will make you stronger."',
+        'Anyway, many of the skills you need as a successful student can be applied to your finances. Consider your financial well-being as a key ingredient of your university education as money worries are extremely stressful and distracting. They can make you feel terrible and hinder your ability to focus on your prime objective: successfully completing your education.',
+        'How can you be a smart and educated consumer? Many schools, community organizations, and even some banks offer financial literacy classes. Consider consulting with your school\'s financial aid office or seeking input from your parents or other respected adults in setting up a budget. An additional option is finding a partner to help you stay on track and find pleasure in the administration of your own financial affairs. Most importantly, if you find yourself getting into financial trouble, don\'t let your ego get in your way; urgently get help with tackling your problem before it spins out of control and lands you in legal troubles.',
+        'All this will help you become an educated consumer and saver. As you learn to balance spending and saving, you will become the captain of your own ship, steering your life in a successful and productive direction through the choppy waters.'
+    ];
+    function openArticleModal() {
+        const body = document.getElementById('articleBody');
+        if (!body.innerHTML) {
+            body.innerHTML = ARTICLE_PARAS.map((p, i) =>
+                `<div class="para"><span class="para-num">Para.${i+1}</span>${escapeHtml(p)}</div>`
+            ).join('');
+        }
+        document.getElementById('articleModal').classList.remove('hidden');
+    }
+    function closeArticleModal() {
+        document.getElementById('articleModal').classList.add('hidden');
+    }
+
+    // ── 音效系统（使用 Web Audio API，避免外部资源） ──
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+            catch(e) { return null; }
+        }
+        return audioCtx;
+    }
+    function playTone(freq, duration = 0.15, type = 'sine', volume = 0.15) {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        try {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(volume, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        } catch(e) {}
+    }
+    function playSeq(notes) {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        notes.forEach((n, i) => {
+            setTimeout(() => playTone(n.f, n.d || 0.12, n.t || 'sine', n.v || 0.15), i * (n.gap || 90));
+        });
+    }
+    const SFX = {
+        correct:  () => playSeq([{f:660,d:0.1},{f:880,d:0.14}]),
+        wrong:    () => playTone(180, 0.18, 'sawtooth', 0.1),
+        combo:    () => playSeq([{f:660},{f:830},{f:990},{f:1320,d:0.18}]),
+        unlock:   () => playSeq([{f:520,d:0.1},{f:660,d:0.1},{f:780,d:0.1},{f:1040,d:0.22}]),
+        keyword:  () => playSeq([{f:880,d:0.08},{f:1175,d:0.14}]),
+        click:    () => playTone(420, 0.06, 'triangle', 0.08),
+    };
 
     // DOM 元素
     const gameRoot = document.getElementById("gameRoot");
@@ -373,8 +1260,16 @@
     const displayNameSpan = document.getElementById("displayName");
 
     function updateTotalUI() {
-        let total = scores.l1 + scores.l2;
+        let total = scores.l1 + scores.l2 + scores.l3 + comboBonus;
         totalSpan.innerText = total;
+        const bonusEl = document.getElementById('bonusDisplay');
+        const bonusNum = document.getElementById('bonusScore');
+        if (comboBonus > 0 && bonusEl && bonusNum) {
+            bonusEl.style.display = 'inline';
+            bonusNum.textContent = comboBonus;
+        } else if (bonusEl) {
+            bonusEl.style.display = 'none';
+        }
         if (scores.l1 >= 21 && !unlocked.l2 && !previewMode.l2) {
             unlocked.l2 = true;
             document.querySelector(".level-tab[data-lvl='2']").classList.remove("locked");
@@ -385,13 +1280,24 @@
         }
     }
     function setScore(level, val) {
-        if (level === 1) scores.l1 = Math.min(val, 30);
+        if (level === 1) scores.l1 = val; // 词汇本身已限制在30，bonus 独立
         if (level === 2 && !previewMode.l2) scores.l2 = Math.min(val, 40);
+        if (level === 3 && !previewMode.l3) scores.l3 = Math.min(val, 30);
         updateTotalUI();
+    }
+
+    function updateDebateScore() {
+        const userTurns = debateHistory.filter(m => m.role === 'user').length;
+        const s = Math.min(userTurns * 5, 30);
+        const display = document.getElementById("l3ScoreDisplay");
+        if (display) display.innerText = s;
+        if (!previewMode.l3) setScore(3, s);
     }
 
     // 第一关
     function renderLevel1() {
+        hintsUsed = 0;
+        updateHintUI();
         const container = document.getElementById("vocabContainer");
         let html = '';
         vocabList.forEach((item, idx) => {
@@ -411,28 +1317,112 @@
             });
         });
         document.querySelectorAll('.hint-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                alert("📖 Text fill-in: " + btn.dataset.hint);
+            btn.addEventListener('click', () => {
+                if (hintsUsed >= MAX_HINTS) return;
+                hintsUsed++;
+                updateHintUI();
+                // 扣分动画提示（实际扣分在提交时计算）
+                const bar = document.getElementById('hintStatusBar');
+                if (bar) {
+                    bar.classList.add('hint-deduct-anim');
+                    bar.style.borderColor = 'var(--error)';
+                    setTimeout(() => {
+                        bar.classList.remove('hint-deduct-anim');
+                        bar.style.borderColor = '#ffd08a';
+                    }, 500);
+                }
+                showHintPopup(btn.dataset.hint);
             });
         });
     }
-    function submitLevel1() {
-        let total = 0;
-        vocabList.forEach((item, idx) => {
-            let user = vocabAnswers[idx];
-            let isCorrect = (user === item.word);
-            let fb = document.getElementById(`fb_v${idx}`);
-            if (isCorrect) { total += 3; fb.innerHTML = "✅ Correct +3"; fb.className = "feedback correct-fb"; }
-            else { fb.innerHTML = `❌ Incorrect. Correct: ${item.word} +0`; fb.className = "feedback wrong-fb"; }
-        });
-        setScore(1, total);
-        let fbDiv = document.getElementById("l1Feedback");
-        fbDiv.innerHTML = total >= 21 ? `🎉 Act 1 score: ${total}/30 → Act 2 unlocked!` : `⚠️ Score: ${total}/30 (need ≥21 to unlock Act 2). You can preview Act 2.`;
-        fbDiv.style.color = total >= 21 ? "#2b7a4b" : "#c7432e";
-        if (total >= 21) {
-            unlocked.l2 = true;
-            document.querySelector(".level-tab[data-lvl='2']").classList.remove("locked");
-            previewMode.l2 = false;
+    async function submitLevel1() {
+        const btn = document.getElementById('submitL1');
+        btn.disabled = true; btn.style.opacity = '0.5';
+
+        let total = 0, streak = 0;
+        maxCombo = 0;
+        comboBonus = 0;
+
+        for (let idx = 0; idx < vocabList.length; idx++) {
+            const item = vocabList[idx];
+            const user = vocabAnswers[idx];
+            const isCorrect = (user === item.word);
+            const fb = document.getElementById(`fb_v${idx}`);
+            const row = fb ? fb.closest('.vocab-row') : null;
+
+            if (isCorrect) {
+                streak++;
+                if (streak > maxCombo) maxCombo = streak;
+                total += 3;
+                if (streak >= 3 && comboBonus < 10) {
+                    comboBonus = Math.min(comboBonus + 1, 10);
+                }
+                if (fb) {
+                    fb.innerHTML = streak >= 3
+                        ? `<span style="color:#e07b20;font-weight:700;">🔥 Correct! +3 COMBO x${streak}! (+1🔥bonus)</span>`
+                        : `✅ Correct +3`;
+                    fb.className = 'feedback correct-fb';
+                }
+                if (row) flashRow(row, true);
+                updateComboBadge(streak);
+                if (streak === 3) { showComboToast('🔥 COMBO! 每题额外 +1 bonus！'); SFX.combo(); }
+                else { SFX.correct(); }
+            } else {
+                if (streak >= 3) showComboToast('💨 连击中断...');
+                streak = 0;
+                if (fb) { fb.innerHTML = '❌ Incorrect +0'; fb.className = 'feedback wrong-fb'; }
+                if (row) flashRow(row, false);
+                updateComboBadge(0);
+                SFX.wrong();
+            }
+            await new Promise(r => setTimeout(r, 260));
+        }
+
+        document.querySelectorAll('.vocab-input').forEach(inp => { inp.disabled = true; inp.style.opacity = '0.6'; });
+        document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+        setTimeout(() => updateComboBadge(0), 1200);
+
+        const displayTotal = Math.min(Math.max(0, total - hintsUsed), 30);
+        setScore(1, displayTotal);
+        updateTotalUI(); // 触发 bonus 显示
+
+        const hintInfo = hintsUsed > 0 ? `，提示扣 ${hintsUsed} 分` : '';
+        const comboInfo = comboBonus > 0 ? `，🔥 连击 bonus +${comboBonus}` : '';
+        const fbDiv = document.getElementById('l1Feedback');
+        if (displayTotal >= 21) {
+            unlocked.l2 = true; previewMode.l2 = false;
+            document.querySelector(".level-tab[data-lvl='2']").classList.remove('locked');
+            fbDiv.innerHTML = `🎉 第一幕得分：${displayTotal}/30${hintInfo}${comboInfo}`;
+            fbDiv.style.color = '#2b7a4b';
+            setTimeout(() => SFX.unlock(), 300);
+            const correctCount = vocabList.filter((item, i) => vocabAnswers[i] === item.word).length;
+            const bonusLine = comboBonus > 0
+                ? `<div class="score-row bonus-row"><span>🔥 连击 Bonus</span><span class="score-val bonus-val">+${comboBonus}</span></div>`
+                : '';
+            const hintLine = hintsUsed > 0
+                ? `<div class="score-row deduct-row"><span>📖 提示扣分</span><span class="score-val deduct-val">-${hintsUsed}</span></div>`
+                : '';
+            const totalLine = comboBonus > 0
+                ? `<div class="score-row total-row"><span>📊 本幕总分</span><span class="score-val">${displayTotal} + ${comboBonus}🔥</span></div>`
+                : `<div class="score-row total-row"><span>📊 本幕得分</span><span class="score-val">${displayTotal}/30</span></div>`;
+            showCutscene({
+                emoji: '🎉',
+                title: '第一幕完成！侦探模式已解锁',
+                scoreBlock: `<div class="score-summary">
+                    <div class="score-row"><span>✅ 答对题数</span><span class="score-val">${correctCount} / ${vocabList.length}</span></div>
+                    <div class="score-row"><span>📝 基础得分</span><span class="score-val">${correctCount * 3} 分</span></div>
+                    ${hintLine}
+                    ${bonusLine}
+                    <div class="score-divider"></div>
+                    ${totalLine}
+                </div>`,
+                body: '小李："词汇掌握了！现在去找课文里真正的论据。"',
+                quote: '"The government tells us to spend or we\'ll never get out of the recession. At the same time, we are encouraged to save more…" — para.1',
+                btn: '▶ 进入第二幕 · 段落侦探'
+            }, () => switchLevel(2));
+        } else {
+            fbDiv.innerHTML = `⚠️ 第一幕得分：${displayTotal}/30（需 ≥21 分解锁第二幕）${hintInfo}${comboInfo}，可预览第二幕。`;
+            fbDiv.style.color = '#c7432e';
         }
         updateTotalUI();
     }
@@ -467,30 +1457,69 @@
     }
     function submitLevel2() {
         if (!unlocked.l2 && !previewMode.l2) {
-            alert("Act 2 not unlocked. You can click the tab to preview.");
+            alert("第二幕尚未解锁，可点击标签预览。");
             return;
         }
         let total = 0;
+        const correctCount2 = matchStatements.filter((stmt, idx) => matchAnswers[idx] === stmt.correctPara).length;
         matchStatements.forEach((stmt, idx) => {
             let user = matchAnswers[idx];
             let isCorrect = (user === stmt.correctPara);
             let fb = document.getElementById(`fb_m${idx}`);
-            if (isCorrect) { total += stmt.points; if (fb) { fb.innerHTML = `✓ Correct! paragraph ${stmt.correctPara} +${stmt.points}`; fb.className = "feedback correct-fb"; } }
-            else { if (fb) { fb.innerHTML = `✗ Incorrect. Correct: ${stmt.correctPara} +0`; fb.className = "feedback wrong-fb"; } }
+            if (isCorrect) { total += stmt.points; if (fb) { fb.innerHTML = `✓ 正确！+${stmt.points}`; fb.className = "feedback correct-fb"; } }
+            else { if (fb) { fb.innerHTML = `✗ 不正确 +0`; fb.className = "feedback wrong-fb"; } }
         });
+        // 提交音效：根据得分播放
+        if (correctCount2 === matchStatements.length) SFX.combo();
+        else if (correctCount2 >= matchStatements.length / 2) SFX.correct();
+        else SFX.wrong();
+        document.querySelectorAll('.para-input').forEach(inp => { inp.disabled = true; inp.style.opacity = '0.6'; });
+        document.getElementById('submitL2').disabled = true;
+        document.getElementById('submitL2').style.opacity = '0.5';
         if (previewMode.l2) {
-            document.getElementById("l2Feedback").innerHTML = `Preview score ${total}/40 (not added). Complete Act 1 for official.`;
+            document.getElementById("l2Feedback").innerHTML = `预览得分：${total}/40（预览模式不计入总分，完成第一幕后正式作答）`;
             return;
         }
         setScore(2, total);
         let fbDiv = document.getElementById("l2Feedback");
         if (total >= 28) {
-            fbDiv.innerHTML = `🎉 Act 2 score: ${total}/40 → Act 3 (AI Debate) unlocked!`;
             unlocked.l3 = true;
-            document.querySelector(".level-tab[data-lvl='3']").classList.remove("locked");
             previewMode.l3 = false;
+            document.querySelector(".level-tab[data-lvl='3']").classList.remove("locked");
+            fbDiv.innerHTML = `🎉 第二幕得分：${total}/40，AI 辩论已解锁！`;
+            setTimeout(() => SFX.unlock(), 300);
+            showCutscene({
+                emoji: '💬',
+                title: '第二幕完成！AI辩论已解锁',
+                scoreBlock: `<div class="score-summary">
+                    <div class="score-row"><span>✅ 答对题数</span><span class="score-val">${correctCount2} / ${matchStatements.length}</span></div>
+                    <div class="score-row"><span>📝 段落得分</span><span class="score-val">${total} 分</span></div>
+                    <div class="score-divider"></div>
+                    <div class="score-row total-row"><span>📊 本幕得分</span><span class="score-val">${total}/40</span></div>
+                </div>`,
+                body: '小李："我终于理解课文的论证结构了。现在该轮到我自己表达观点了——用英语！"',
+                quote: '"On one hand, we want more things… On the other hand, a little voice inside us echoes those upright messages…" — para.6',
+                btn: '⚔️ 进入第三幕 · AI英文辩论'
+            }, () => switchLevel(3));
         } else {
-            fbDiv.innerHTML = `📌 Score: ${total}/40 (need ≥28 to unlock Act 3). You can preview Act 3.`;
+            fbDiv.innerHTML = `📌 第二幕得分：${total}/40（需 ≥28 分解锁第三幕）`;
+            // 未达解锁线：给予预览权限，并提示可以重新作答
+            previewMode.l3 = true;
+            document.querySelector(".level-tab[data-lvl='3']").classList.remove("locked");
+            showCutscene({
+                emoji: '📖',
+                title: '第二幕结束',
+                scoreBlock: `<div class="score-summary">
+                    <div class="score-row"><span>✅ 答对题数</span><span class="score-val">${correctCount2} / ${matchStatements.length}</span></div>
+                    <div class="score-row"><span>📝 段落得分</span><span class="score-val">${total} 分</span></div>
+                    <div class="score-divider"></div>
+                    <div class="score-row deduct-row"><span>⚠️ 距解锁还差</span><span class="score-val deduct-val">${28 - total} 分</span></div>
+                    <div class="score-row total-row"><span>📊 本幕得分</span><span class="score-val">${total}/40</span></div>
+                </div>`,
+                body: '小李："这次论证找得不够准……不过我还是想去辩论场试一试，哪怕以预览身份。"',
+                quote: '"Consider your financial well-being as a key ingredient of your university education…" — para.7',
+                btn: '👀 预览第三幕（分数不计入总分）'
+            }, () => switchLevel(3));
         }
         updateTotalUI();
     }
@@ -516,10 +1545,12 @@
                 const response = await fetch(proxyUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                   messages: messages,
-                   model: "deepseek-chat"
-                })
+                    body: JSON.stringify({
+                        messages: messages,
+                        model: "deepseek-chat",
+                        max_tokens: 130,
+                        temperature: 0.7
+                    })
                 });
                 if (!response.ok) throw new Error(`Proxy error ${response.status}`);
                 const data = await response.json();
@@ -552,12 +1583,27 @@
         const userInput = document.getElementById("userDebateInput").value.trim();
         if (!userInput) return;
         const chatWindow = document.getElementById("chatWindow");
+
+        // 关键词检测
+        const newKeywords = detectKeywords(userInput);
+        let badgeHtml = '';
+        if (newKeywords.length > 0) {
+            comboBonus = Math.min(comboBonus + newKeywords.length, 10); // 关键词也奖励到 bonus 槽（统一奖励池，最多+10）
+            badgeHtml = newKeywords.map(kw => `<span class="keyword-badge">✨ ${kw}</span>`).join('');
+            SFX.keyword();
+            updateTotalUI();
+        }
+
         const userDiv = document.createElement("div");
         userDiv.className = "chat-message user-msg";
-        userDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(userInput)}`;
+        userDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(userInput)}${badgeHtml}`;
         chatWindow.appendChild(userDiv);
         document.getElementById("userDebateInput").value = "";
         debateHistory.push({ role: "user", content: userInput });
+
+        // 进度条立即更新
+        updateDebateProgress();
+
         const loadingDiv = document.createElement("div");
         loadingDiv.className = "chat-message ai-msg";
         loadingDiv.innerHTML = "<em>🤖 AI thinking...</em>";
@@ -571,10 +1617,22 @@
         chatWindow.appendChild(aiDiv);
         debateHistory.push({ role: "assistant", content: aiReply });
         chatWindow.scrollTop = chatWindow.scrollHeight;
-        // 隐藏之前的评价框
+        updateDebateScore();
         document.getElementById("evaluationResult").classList.add("hidden");
+
+        // AI 回复后随机给一个教练提示
+        showCoachTip();
     }
     
+    function renderEvaluation(text) {
+        if (!text) return '';
+        let html = escapeHtml(text);
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/(总分[：:]\s*\d+\/100)/g, '<span class="eval-score">$1</span>');
+        html = html.replace(/&lt;br&gt;/g, '<br>').replace(/\n/g, '<br>');
+        return `<div class="eval-content">${html}</div>`;
+    }
+
     async function evaluateDebate() {
         if (debateHistory.length < 2) {
             alert("Please have at least one exchange with AI before evaluation.");
@@ -582,11 +1640,29 @@
         }
         const evaluationPrompt = {
             role: "system",
-            content: `You are an impartial debate judge. Based on the entire conversation history, evaluate the student's performance in the debate about spending vs saving. Provide:
-1. A total score out of 100 (breakdown: logical reasoning 40, use of article evidence 30, English fluency 30).
-2. Specific strengths and weaknesses.
-3. Suggestions for improvement.
-Keep the evaluation in English, concise, within 200 words.`
+            content: `你是一位中立的英语辩论评审。请根据对话历史，对学生在"花钱 vs 存钱"辩论中的表现给出评价。请严格使用以下中文 Markdown 格式输出，不要添加任何额外内容：
+
+**总分：X/100**
+- 逻辑论证：X/40
+- 课文引用：X/30
+- 英语表达：X/30
+
+**优点：**
+（用 1-2 句话指出最突出的 1-2 个亮点，要具体，避免空话）
+
+**不足：**
+（用 1-2 句话指出最关键的 1-2 个问题，要具体到学生的某句话或某次回合）
+
+**改进建议：**
+1. （建议一，要可操作）
+2. （建议二，要可操作）
+3. （建议三，要可操作）
+
+要求：
+- 全程使用中文。
+- 评价要具体，引用学生说过的内容。
+- 总长度控制在 200 字以内，简洁有力。
+- 评分要严格，不要给所有学生都打高分；优秀的回合才给高分。`
         };
         const messages = [evaluationPrompt, ...debateHistory.slice(-12)];
         const proxyUrl = PROXY_URL;
@@ -611,21 +1687,54 @@ Keep the evaluation in English, concise, within 200 words.`
             evaluationText = "⚠️ No proxy or API Key configured. Cannot evaluate.";
         }
         const evalDiv = document.getElementById("evaluationResult");
-        evalDiv.innerHTML = `<strong>🏆 Debate Evaluation & Score:</strong><br>${escapeHtml(evaluationText)}`;
+        const replayCardHtml = `
+            <div class="replay-card">
+                <div class="replay-card-title">🔄 想再来一局？</div>
+                <div class="replay-card-desc">从对立角度再练一次，能让你的论证能力翻倍。AI 会切换立场，本局辩论记录清空。</div>
+                <button class="replay-btn" id="replayDebateBtn">🎯 换 AI 立场，再战一局！</button>
+            </div>`;
+        evalDiv.innerHTML = `<div class="eval-title">🏆 辩论评价与得分</div>${renderEvaluation(evaluationText)}${replayCardHtml}`;
         evalDiv.classList.remove("hidden");
+        evalDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        SFX.unlock();
+        // 绑定重新挑战按钮
+        const replayBtn = document.getElementById('replayDebateBtn');
+        if (replayBtn) replayBtn.addEventListener('click', replayDebate);
+    }
+
+    // ── 重新挑战：切换学生立场 + 清空对话 ──
+    function replayDebate() {
+        SFX.click();
+        // 切换学生立场
+        studentStance = studentStance === 'spend' ? 'save' : 'spend';
+        aiStance = studentStance === 'spend' ? 'con' : 'pro';
+        // 清空辩论历史 + 评价
+        debateHistory = [];
+        usedKeywords.clear();
+        document.getElementById('evaluationResult').classList.add('hidden');
+        document.getElementById('coachTip').classList.add('hidden');
+        // 更新立场卡视觉
+        document.querySelectorAll('.stance-card').forEach(c => {
+            c.classList.toggle('selected', c.dataset.stance === studentStance);
+        });
+        // 重新渲染辩论开场白
+        const stanceLabel = studentStance === 'spend' ? '💸 I support SPENDING' : '🏦 I support SAVING';
+        const aiLabel = aiStance === 'pro' ? 'pro-spending' : 'pro-saving';
+        const badge = document.getElementById('stanceBadge');
+        badge.innerHTML = `<span style="color:var(--teal-dark);">Your stance: ${stanceLabel}</span> &nbsp;|&nbsp; <span style="color:#e07b20;">AI stance: ${aiLabel}</span> &nbsp;<span style="background:#fff5e0;color:#b86e1a;padding:2px 8px;border-radius:10px;font-size:0.72rem;">🔄 第 2 局</span>`;
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.innerHTML = '';
+        const opening = studentStance === 'spend'
+            ? `Round 2! You've now switched to support SPENDING. Brave move — let's see if you can argue both sides convincingly. I'll argue for saving. Begin!`
+            : `Round 2! You've now switched to support SAVING. Smart move — defending different positions is the mark of a true thinker. I'll push back hard for spending. Begin!`;
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'chat-message ai-msg';
+        aiDiv.innerHTML = `<strong>🤖 AI (${aiLabel}):</strong> ${opening}`;
+        chatWindow.appendChild(aiDiv);
+        // 注意：不重置 scores.l3，因为重玩可以累计分数（但 updateDebateScore 会按 userTurns 计算）
+        updateDebateProgress();
     }
     
-    function clearChat() {
-        debateHistory = [];
-        const chatWindow = document.getElementById("chatWindow");
-        chatWindow.innerHTML = `<div class="chat-message ai-msg">🤖 AI: Chat cleared. Start a new debate in English!</div>`;
-        document.getElementById("evaluationResult").classList.add("hidden");
-    }
-    function switchStance() {
-        aiStance = aiStance === "pro" ? "con" : "pro";
-        document.getElementById("switchStanceBtn").innerHTML = `🔄 Switch AI Stance (current: ${aiStance === "pro" ? "pro-spending" : "pro-saving"})`;
-        alert(`AI stance switched to "${aiStance === "pro" ? "support spending" : "support saving"}".`);
-    }
     
     // 提交全部数据
     async function submitAllData() {
@@ -633,7 +1742,7 @@ Keep the evaluation in English, concise, within 200 words.`
         const payload = {
             studentName: student,
             timestamp: new Date().toISOString(),
-            scores: { vocabulary: scores.l1, matching: scores.l2, total: scores.l1 + scores.l2 },
+            scores: { vocabulary: scores.l1, matching: scores.l2, debate: scores.l3, comboBonus: comboBonus, total: scores.l1 + scores.l2 + scores.l3 + comboBonus },
             answers: {
                 vocabulary: vocabAnswers.map((ans, i) => ({ word: vocabList[i].word, userAnswer: ans, correct: ans === vocabList[i].word })),
                 matching: matchAnswers.map((ans, i) => ({ statement: matchStatements[i].text, userParagraph: ans, correctParagraph: matchStatements[i].correctPara, isCorrect: ans === matchStatements[i].correctPara })),
@@ -661,8 +1770,7 @@ Keep the evaluation in English, concise, within 200 words.`
         }
         if (lvl === 3) {
             if (!unlocked.l3 && scores.l2 < 28) {
-                if (confirm("Act 2 not passed. Enter PREVIEW mode? (debate still works)")) { previewMode.l3 = true; unlocked.l3 = true; }
-                else return;
+                previewMode.l3 = true; unlocked.l3 = true;
             } else if (scores.l2 >= 28 && !unlocked.l3) { unlocked.l3 = true; previewMode.l3 = false; }
             else if (unlocked.l3 && scores.l2 >= 28) previewMode.l3 = false;
         }
@@ -673,13 +1781,16 @@ Keep the evaluation in English, concise, within 200 words.`
         document.querySelector(`.level-tab[data-lvl="${lvl}"]`).classList.add("active");
         if (lvl === 2) renderLevel2();
         if (lvl === 3) { renderLevel3(); }
+        // 离开第三幕时隐藏课文浮动按钮
+        const fab = document.getElementById('articleFab');
+        if (fab) fab.classList.toggle('hidden', lvl !== 3);
         updateTotalUI();
     }
     function renderLevel3() {
         let noticeDiv = document.getElementById("previewNotice3");
         if (previewMode.l3) {
             noticeDiv.classList.remove("hidden");
-            noticeDiv.innerHTML = "⚠️ Preview mode: debate record still saved, but official unlock requires passing Act 2.";
+            noticeDiv.innerHTML = "⚠️ 预览模式：辩论记录仍会保存，但本幕分数不计入总分。需第二幕 ≥28 分才能正式解锁。";
         } else {
             noticeDiv.classList.add("hidden");
         }
@@ -690,9 +1801,33 @@ Keep the evaluation in English, concise, within 200 words.`
         document.getElementById("submitL1").addEventListener("click", submitLevel1);
         document.getElementById("submitL2").addEventListener("click", submitLevel2);
         document.getElementById("sendDebateBtn").addEventListener("click", sendDebate);
-        document.getElementById("clearChatBtn").addEventListener("click", clearChat);
-        document.getElementById("switchStanceBtn").addEventListener("click", switchStance);
+        document.getElementById("clearChatBtn").addEventListener("click", () => {
+            SFX.click();
+            debateHistory = [];
+            usedKeywords.clear();
+            document.getElementById('debateMain').classList.add('hidden');
+            document.getElementById('stanceSelector').classList.remove('hidden');
+            document.querySelectorAll('.stance-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('startDebateBtn').style.display = 'none';
+            document.getElementById('evaluationResult').classList.add('hidden');
+            document.getElementById('coachTip').classList.add('hidden');
+            document.getElementById('articleFab').classList.add('hidden');
+            updateDebateScore();
+            updateDebateProgress();
+        });
         document.getElementById("evaluateDebateBtn").addEventListener("click", evaluateDebate);
+        // 课文弹窗事件
+        document.getElementById('articleFab').addEventListener('click', () => { SFX.click(); openArticleModal(); });
+        document.getElementById('closeArticleBtn').addEventListener('click', closeArticleModal);
+        document.getElementById('articleModal').addEventListener('click', (e) => {
+            if (e.target.id === 'articleModal') closeArticleModal();
+        });
+        // ESC 关闭课文弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('articleModal').classList.contains('hidden')) {
+                closeArticleModal();
+            }
+        });
         document.getElementById("submitAllDataBtn").addEventListener("click", submitAllData);
         document.getElementById("editNameBtn").addEventListener("click", () => {
             let newName = prompt("Enter new name:", student);
@@ -727,7 +1862,13 @@ Keep the evaluation in English, concise, within 200 words.`
         renderLevel1();
         attachEvents();
     });
-    function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+    }
     initName();
 </script>
 </body>
