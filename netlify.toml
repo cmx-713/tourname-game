@@ -1,0 +1,5 @@
+[functions]
+  node_bundler = "esbuild"
+
+[functions."debate"]
+  node_version = "18"
