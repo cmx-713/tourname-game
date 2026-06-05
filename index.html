@@ -496,10 +496,12 @@
     }
 
     // ========== AI 辩论核心（支持代理或直连，强制英文） ==========
+    const PROXY_URL = "https://english-tournament.netlify.app/.netlify/functions/debate";
+
     async function callAIDebate(userMessage) {
-        const proxyUrl = document.getElementById("proxyUrlInput").value.trim();
+        const proxyUrl = PROXY_URL;
         const apiKey = document.getElementById("apiKeyInput").value.trim();
-        const model = document.getElementById("modelSelect").value;
+        const model = document.getElementById("modelSelect").value || "deepseek-chat";
         
         // 构建请求体
         const messages = [
@@ -587,10 +589,10 @@
 Keep the evaluation in English, concise, within 200 words.`
         };
         const messages = [evaluationPrompt, ...debateHistory.slice(-12)];
-        const proxyUrl = document.getElementById("proxyUrlInput").value.trim();
+        const proxyUrl = PROXY_URL;
         const apiKey = document.getElementById("apiKeyInput").value.trim();
-        const model = document.getElementById("modelSelect").value;
-        
+        const model = document.getElementById("modelSelect").value || "deepseek-chat";
+
         let evaluationText = "";
         if (proxyUrl) {
             try {
