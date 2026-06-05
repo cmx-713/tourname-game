@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🎓 毕业季·财务抉择 | 词汇·段落·AI英文辩论</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #1e2a2a 0%, #0f1c1a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .game-container {
+            max-width: 1400px;
+            width: 100%;
+            background: #fffef7;
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        .story-header {
+            background: #2c4f3f;
+            color: #f9e0a0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 3px solid #f7bc45;
+        }
+        .student-info {
+            background: #1e3a32;
+            padding: 6px 18px;
+            border-radius: 40px;
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+        .score-board {
+            background: #f7bc45;
+            color: #1f3e2c;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+        .level-tabs {
+            display: flex;
+            background: #e2e6e3;
+            flex-wrap: wrap;
+        }
+        .level-tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px 0;
+            font-weight: 700;
+            cursor: pointer;
+            background: #d9e0db;
+            color: #2c5a4b;
+            transition: 0.2s;
+            border-right: 1px solid #cbd5cf;
+        }
+        .level-tab.active {
+            background: white;
+            color: #1f4e3f;
+            border-bottom: 3px solid #f7bc45;
+        }
+        .level-tab.locked {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        .panel {
+            display: none;
+            padding: 2rem;
+            background: #fffef7;
+            min-height: 620px;
+        }
+        .panel.active-panel {
+            display: block;
+        }
+        .story-card {
+            background: #fef8e7;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 1.5rem;
+            border-left: 8px solid #f7bc45;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .vocab-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            background: #faf7f0;
+            padding: 10px 15px;
+            border-radius: 60px;
+        }
+        .vocab-def {
+            flex: 2;
+            font-weight: 500;
+        }
+        .vocab-input {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid #ddd0b6;
+        }
+        .hint-btn {
+            background: #e9e2d3;
+            border: none;
+            border-radius: 40px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .match-item {
+            background: #fef9ef;
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 20px;
+        }
+        .para-input {
+            width: 80px;
+            padding: 6px;
+            border-radius: 30px;
+            border: 1px solid #cfc2a8;
+            text-align: center;
+        }
+        .btn {
+            background: #2c5a4b;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-gold {
+            background: #f7bc45;
+            color: #2c4a3b;
+        }
+        .preview-badge {
+            background: #ffb347;
+            font-size: 0.65rem;
+            border-radius: 20px;
+            padding: 2px 8px;
+            margin-left: 8px;
+        }
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        .correct-fb { color: #2b7a4b; }
+        .wrong-fb { color: #c7432e; }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .name-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            text-align: center;
+            max-width: 400px;
+        }
+        .hidden { display: none; }
+        .preview-notice {
+            background: #fff2df;
+            padding: 8px 16px;
+            border-radius: 28px;
+            margin-bottom: 16px;
+        }
+        .ai-debate-module {
+            background: #eef3f0;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 0rem;
+            border: 1px solid #cde2d6;
+        }
+        .chat-window {
+            background: white;
+            border-radius: 1rem;
+            padding: 12px;
+            height: 320px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 1px solid #ddd0b6;
+        }
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        .user-msg {
+            background: #f7bc4533;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-msg {
+            background: #e6e9e8;
+            text-align: left;
+            border-bottom-left-radius: 4px;
+        }
+        .api-config {
+            display: none;
+        }
+        .api-key-input, .proxy-input {
+            flex: 2;
+            padding: 8px;
+            border-radius: 40px;
+            border: 1px solid #ccc;
+            min-width: 180px;
+        }
+        .model-select {
+            padding: 8px;
+            border-radius: 40px;
+        }
+        .evaluation-box {
+            background: #ffffffdd;
+            border-radius: 1rem;
+            padding: 12px;
+            margin-top: 16px;
+            border-left: 4px solid #f7bc45;
+        }
+    </style>
+</head>
+<body>
+<div id="gameRoot" style="display: none;">
+<div class="game-container">
+    <div class="story-header">
+        <div><span style="font-size:1.4rem;">🎓 小李的毕业季</span><br><span style="font-size:0.7rem;">Spend or Save? 财务抉择之路 | AI Debate in English</span></div>
+        <div class="student-info">👤 <span id="displayName">-</span> <button id="editNameBtn" style="background:none;border:1px solid #f7bc45;border-radius:20px;padding:2px 8px;">✎ 修改</button></div>
+        <div class="score-board">🏆 得分: <span id="totalScore">0</span> / 70</div>
+    </div>
+    <div class="level-tabs" id="levelTabs">
+        <div class="level-tab active" data-lvl="1">📖 第一幕 · 词汇大师</div>
+        <div class="level-tab locked" data-lvl="2">🔍 第二幕 · 段落侦探</div>
+        <div class="level-tab locked" data-lvl="3">💬 第三幕 · AI英文辩论</div>
+    </div>
+
+    <!-- 第一关：词汇 -->
+    <div id="panel1" class="panel active-panel">
+        <div class="story-card">📖 剧情：小李即将毕业，他常陷入“花钱还是存钱”的矛盾。先帮他掌握课文中的关键概念。根据英文释义写出对应单词（提示会展示课文原句填空）。</div>
+        <div id="vocabContainer"></div>
+        <button id="submitL1" class="btn btn-gold">✨ 提交第一幕 · 解锁侦探关</button>
+        <div id="l1Feedback" class="feedback" style="margin-top:16px;"></div>
+    </div>
+
+    <!-- 第二关：段落匹配 -->
+    <div id="panel2" class="panel">
+        <div class="story-card">🔎 剧情：小李翻出课文《Spend or save – the student's dilemma》，想找到支持不同观点的原文。请帮他把每个陈述匹配到正确的段落号（1-9）。</div>
+        <div id="previewNotice2" class="preview-notice hidden"></div>
+        <div id="matchContainer"></div>
+        <button id="submitL2" class="btn btn-gold">🔍 提交第二幕 · 解锁辩论</button>
+        <div id="l2Feedback" class="feedback"></div>
+    </div>
+
+    <!-- 第三关：AI英文辩论（带代理/API配置） -->
+    <div id="panel3" class="panel">
+        <div class="story-card">💬 剧情：小李终于把课文读明白了，但他还想听听你的真实观点。现在，你与AI辩论助教展开一场关于“大学生该花钱还是该存钱”的**英文对话**。AI会引用课文反驳你。<br>⚠️ 要求：请使用英文发言。AI将全程使用英文回复。</div>
+        <div id="previewNotice3" class="preview-notice hidden"></div>
+        <div class="ai-debate-module">
+            <div class="api-config">
+                <input type="text" id="proxyUrlInput" class="proxy-input" value="https://english-tournament.netlify.app/.netlify/functions/debate">
+                <input type="text" id="apiKeyInput" class="api-key-input" value="">
+                <select id="modelSelect" class="model-select">
+                    <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
+                    <option value="deepseek-chat">deepseek-chat</option>
+                    <option value="gpt-4o-mini">GPT-4o-mini</option>
+                </select>
+                <button id="clearChatBtn" class="btn" style="background:#6c757d; padding:6px 16px;">清空对话</button>
+            </div>
+            <div class="chat-window" id="chatWindow">
+                <div class="chat-message ai-msg">🤖 AI: Hello! I'm your debate opponent. You can choose to support "spending first" or "saving first". I will argue the opposite and cite the article. Please use English. Let's begin!</div>
+            </div>
+            <textarea id="userDebateInput" rows="2" placeholder="Type your argument in English... (e.g., I think students should spend moderately because... )"></textarea>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;">
+                <button id="sendDebateBtn" class="btn btn-gold">⚡ Send & Debate</button>
+                <button id="switchStanceBtn" class="btn" style="background:#5f7f6e;">🔄 Switch AI Stance (current: opposing you)</button>
+                <button id="evaluateDebateBtn" class="btn" style="background:#d98c2b;">🏁 End Debate & Get Evaluation</button>
+            </div>
+            <div id="debateStatus" class="feedback" style="margin-top:6px;"></div>
+            <div id="evaluationResult" class="evaluation-box hidden"></div>
+        </div>
+        <button id="submitAllDataBtn" class="btn btn-gold" style="margin-top: 20px;">📤 提交全部闯关数据 (含辩论记录)</button>
+        <div id="submitApiStatus" class="feedback"></div>
+    </div>
+</div>
+</div>
+
+<!-- 姓名模态框 -->
+<div id="nameModal" class="modal">
+    <div class="name-card">
+        <h2>🎭 进入小李的财务世界</h2>
+        <p>请填写你的姓名或学号</p>
+        <input type="text" id="studentName" placeholder="例: 李明 / 20240001" style="width:100%; padding:10px; margin:15px 0;">
+        <button id="confirmName" class="btn">开始闯关</button>
+        <div id="nameError" style="color:red; font-size:0.8rem;"></div>
+    </div>
+</div>
+
+<script>
+    // ======================= 词汇数据 =======================
+    const vocabList = [
+        { word: "recession", def: "A significant decline in economic activity lasting more than a few months (GDP, income, employment drop).", hint: "para.1: '...or we'll never get out of the ______.'" },
+        { word: "permissive", def: "Allowing considerable freedom; not strict, especially regarding desires or spending.", hint: "para.3: '...the ______ perspective: Buy, spend, and get it now.'" },
+        { word: "upright", def: "Morally strict, following traditional values like hard work, saving, and self-restraint.", hint: "para.3: '...an ______ message urges us: Work hard and save.'" },
+        { word: "postpone", def: "To delay something to a later time; to put off (e.g., desires).", hint: "para.3: '...______ desires. Avoid luxuries.'" },
+        { word: "appetite", def: "A strong desire or craving, especially for material things.", hint: "para.6: '...satisfy our material ______.'" },
+        { word: "debt", def: "Money owed to another; the state of owing.", hint: "para.6: 'Don't fall into ______.'" },
+        { word: "control", def: "The power to influence or direct behavior; self-command.", hint: "para.6: 'Retain ______ over your own life.'" },
+        { word: "literacy", def: "Competence or knowledge in a specific area (e.g., financial literacy).", hint: "para.8: '...financial ______ classes.'" },
+        { word: "budget", def: "A plan for income and expenditure; a financial roadmap.", hint: "para.8: '...setting up a ______.'" },
+        { word: "captain", def: "A leader of a ship; metaphor for someone who steers their own financial life.", hint: "para.9: '...______ of your own ship.'" }
+    ];
+    // 匹配题
+    const rawMatches = [
+        { text: "The government sends two opposite signals: spend to avoid economic trouble, yet save to protect the nation.", correctPara: "1", points: 5 },
+        { text: "After paying your overdue credit card bill, the email tone shifts from threatening to flattering.", correctPara: "2", points: 5 },
+        { text: "Parents and schools promote delaying gratification and avoiding luxuries.", correctPara: "3", points: 5 },
+        { text: "Advertisements appear everywhere — even on buses and subways — inescapable while awake.", correctPara: "4", points: 5 },
+        { text: "A famous ad says: 'I live my dreams today, not tomorrow', encouraging instant satisfaction.", correctPara: "5", points: 5 },
+        { text: "Internal psychological battle: wanting more things vs. the voice warning to stay in control.", correctPara: "6", points: 5 },
+        { text: "Money worries are extremely stressful and can ruin your focus on academic goals.", correctPara: "7", points: 5 },
+        { text: "Seeking help from financial aid offices or taking literacy classes can prevent legal troubles.", correctPara: "8", points: 5 }
+    ];
+    let matchStatements = [...rawMatches];
+    for (let i = matchStatements.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [matchStatements[i], matchStatements[j]] = [matchStatements[j], matchStatements[i]];
+    }
+
+    // 全局状态
+    let student = "";
+    let vocabAnswers = new Array(10).fill('');
+    let matchAnswers = new Array(matchStatements.length).fill('');
+    let debateHistory = [];   // {role, content}
+    let scores = { l1: 0, l2: 0 };
+    let unlocked = { l2: false, l3: false };
+    let previewMode = { l2: false, l3: false };
+    let activeLevel = 1;
+
+    const API_URL_SUBMIT = "https://quickform.cn/api/cm4prjlqpl";
+
+    // AI辩论配置
+    let aiStance = "con";   // "pro" 支持消费, "con" 支持储蓄
+    const systemPromptEnglish = `You are a strict debate opponent on the topic: "Should college students prioritize spending or saving?" You must argue based on the article "Spend or save – the student's dilemma". If the student supports spending, you argue for saving; if the student supports saving, you argue for spending. Keep each response under 150 words, be polite but sharp, and cite paragraphs (e.g., para.1, para.5). Always reply in English.`;
+
+    // DOM 元素
+    const gameRoot = document.getElementById("gameRoot");
+    const nameModalDiv = document.getElementById("nameModal");
+    const totalSpan = document.getElementById("totalScore");
+    const displayNameSpan = document.getElementById("displayName");
+
+    function updateTotalUI() {
+        let total = scores.l1 + scores.l2;
+        totalSpan.innerText = total;
+        if (scores.l1 >= 21 && !unlocked.l2 && !previewMode.l2) {
+            unlocked.l2 = true;
+            document.querySelector(".level-tab[data-lvl='2']").classList.remove("locked");
+        }
+        if (scores.l2 >= 28 && !unlocked.l3 && !previewMode.l3) {
+            unlocked.l3 = true;
+            document.querySelector(".level-tab[data-lvl='3']").classList.remove("locked");
+        }
+    }
+    function setScore(level, val) {
+        if (level === 1) scores.l1 = Math.min(val, 30);
+        if (level === 2 && !previewMode.l2) scores.l2 = Math.min(val, 40);
+        updateTotalUI();
+    }
+
+    // 第一关
+    function renderLevel1() {
+        const container = document.getElementById("vocabContainer");
+        let html = '';
+        vocabList.forEach((item, idx) => {
+            html += `<div class="vocab-row">
+                        <div class="vocab-def">${idx+1}. ${item.def}</div>
+                        <input type="text" class="vocab-input" data-idx="${idx}" placeholder="Enter word" value="${escapeHtml(vocabAnswers[idx])}">
+                        <button class="hint-btn" data-word="${item.word}" data-hint="${item.hint}">📖 课文提示</button>
+                        <div id="fb_v${idx}" class="feedback" style="width:100%; margin-top:4px;"></div>
+                     </div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.vocab-input').forEach(inp => {
+            inp.addEventListener('input', (e) => {
+                let idx = parseInt(inp.dataset.idx);
+                vocabAnswers[idx] = inp.value.trim().toLowerCase();
+                document.getElementById(`fb_v${idx}`).innerHTML = '';
+            });
+        });
+        document.querySelectorAll('.hint-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                alert("📖 Text fill-in: " + btn.dataset.hint);
+            });
+        });
+    }
+    function submitLevel1() {
+        let total = 0;
+        vocabList.forEach((item, idx) => {
+            let user = vocabAnswers[idx];
+            let isCorrect = (user === item.word);
+            let fb = document.getElementById(`fb_v${idx}`);
+            if (isCorrect) { total += 3; fb.innerHTML = "✅ Correct +3"; fb.className = "feedback correct-fb"; }
+            else { fb.innerHTML = `❌ Incorrect. Correct: ${item.word} +0`; fb.className = "feedback wrong-fb"; }
+        });
+        setScore(1, total);
+        let fbDiv = document.getElementById("l1Feedback");
+        fbDiv.innerHTML = total >= 21 ? `🎉 Act 1 score: ${total}/30 → Act 2 unlocked!` : `⚠️ Score: ${total}/30 (need ≥21 to unlock Act 2). You can preview Act 2.`;
+        fbDiv.style.color = total >= 21 ? "#2b7a4b" : "#c7432e";
+        if (total >= 21) {
+            unlocked.l2 = true;
+            document.querySelector(".level-tab[data-lvl='2']").classList.remove("locked");
+            previewMode.l2 = false;
+        }
+        updateTotalUI();
+    }
+
+    // 第二关
+    function renderLevel2() {
+        const container = document.getElementById("matchContainer");
+        let html = '';
+        matchStatements.forEach((stmt, idx) => {
+            let saved = matchAnswers[idx] || '';
+            html += `<div class="match-item">
+                        <div>${stmt.text}</div>
+                        <div style="margin-top:8px;">📌 Paragraph number: <input type="text" class="para-input" data-idx="${idx}" value="${escapeHtml(saved)}" placeholder="1-9"></div>
+                        <div id="fb_m${idx}" class="feedback"></div>
+                     </div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.para-input').forEach(inp => {
+            inp.addEventListener('input', (e) => {
+                let idx = parseInt(inp.dataset.idx);
+                matchAnswers[idx] = inp.value.trim();
+                document.getElementById(`fb_m${idx}`).innerHTML = '';
+            });
+        });
+        let noticeDiv = document.getElementById("previewNotice2");
+        if (previewMode.l2) {
+            noticeDiv.classList.remove("hidden");
+            noticeDiv.innerHTML = "⚠️ Preview mode: answers not counted. Complete Act 1 for official scoring.";
+        } else {
+            noticeDiv.classList.add("hidden");
+        }
+    }
+    function submitLevel2() {
+        if (!unlocked.l2 && !previewMode.l2) {
+            alert("Act 2 not unlocked. You can click the tab to preview.");
+            return;
+        }
+        let total = 0;
+        matchStatements.forEach((stmt, idx) => {
+            let user = matchAnswers[idx];
+            let isCorrect = (user === stmt.correctPara);
+            let fb = document.getElementById(`fb_m${idx}`);
+            if (isCorrect) { total += stmt.points; if (fb) { fb.innerHTML = `✓ Correct! paragraph ${stmt.correctPara} +${stmt.points}`; fb.className = "feedback correct-fb"; } }
+            else { if (fb) { fb.innerHTML = `✗ Incorrect. Correct: ${stmt.correctPara} +0`; fb.className = "feedback wrong-fb"; } }
+        });
+        if (previewMode.l2) {
+            document.getElementById("l2Feedback").innerHTML = `Preview score ${total}/40 (not added). Complete Act 1 for official.`;
+            return;
+        }
+        setScore(2, total);
+        let fbDiv = document.getElementById("l2Feedback");
+        if (total >= 28) {
+            fbDiv.innerHTML = `🎉 Act 2 score: ${total}/40 → Act 3 (AI Debate) unlocked!`;
+            unlocked.l3 = true;
+            document.querySelector(".level-tab[data-lvl='3']").classList.remove("locked");
+            previewMode.l3 = false;
+        } else {
+            fbDiv.innerHTML = `📌 Score: ${total}/40 (need ≥28 to unlock Act 3). You can preview Act 3.`;
+        }
+        updateTotalUI();
+    }
+
+    // ========== AI 辩论核心（支持代理或直连，强制英文） ==========
+    async function callAIDebate(userMessage) {
+        const proxyUrl = document.getElementById("proxyUrlInput").value.trim();
+        const apiKey = document.getElementById("apiKeyInput").value.trim();
+        const model = document.getElementById("modelSelect").value;
+        
+        // 构建请求体
+        const messages = [
+            { role: "system", content: systemPromptEnglish + " Your current stance: " + (aiStance === "pro" ? "support SPENDING" : "support SAVING") + ". Argue against the user." },
+            ...debateHistory.slice(-8),
+            { role: "user", content: userMessage }
+        ];
+        
+        // 优先使用代理（安全，不暴露key）
+        if (proxyUrl) {
+            try {
+                const response = await fetch(proxyUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                   messages: messages,
+                   model: "deepseek-chat"
+                })
+                });
+                if (!response.ok) throw new Error(`Proxy error ${response.status}`);
+                const data = await response.json();
+                return data.reply || data.choices?.[0]?.message?.content || "Proxy response error.";
+            } catch (err) {
+                return `❌ Proxy call failed: ${err.message}. Please check proxy URL.`;
+            }
+        }
+        
+        // 直连（需要API Key，不安全，仅测试）
+        if (!apiKey) {
+            return "⚠️ Please enter a Proxy URL (recommended) or API Key (insecure) to enable AI debate.";
+        }
+        const baseURL = model.includes("deepseek") ? "https://api.deepseek.com/v1/chat/completions" : "https://api.openai.com/v1/chat/completions";
+        try {
+            const response = await fetch(baseURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+                body: JSON.stringify({ model: model, messages: messages, temperature: 0.8, max_tokens: 300 })
+            });
+            if (!response.ok) throw new Error(`API error ${response.status}`);
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (err) {
+            return `❌ AI call failed: ${err.message}. Check API Key or use proxy.`;
+        }
+    }
+    
+    async function sendDebate() {
+        const userInput = document.getElementById("userDebateInput").value.trim();
+        if (!userInput) return;
+        const chatWindow = document.getElementById("chatWindow");
+        const userDiv = document.createElement("div");
+        userDiv.className = "chat-message user-msg";
+        userDiv.innerHTML = `<strong>You:</strong> ${escapeHtml(userInput)}`;
+        chatWindow.appendChild(userDiv);
+        document.getElementById("userDebateInput").value = "";
+        debateHistory.push({ role: "user", content: userInput });
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "chat-message ai-msg";
+        loadingDiv.innerHTML = "<em>🤖 AI thinking...</em>";
+        chatWindow.appendChild(loadingDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        const aiReply = await callAIDebate(userInput);
+        loadingDiv.remove();
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "chat-message ai-msg";
+        aiDiv.innerHTML = `<strong>AI (${aiStance === "pro" ? "pro-spending" : "pro-saving"}):</strong> ${escapeHtml(aiReply)}`;
+        chatWindow.appendChild(aiDiv);
+        debateHistory.push({ role: "assistant", content: aiReply });
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        // 隐藏之前的评价框
+        document.getElementById("evaluationResult").classList.add("hidden");
+    }
+    
+    async function evaluateDebate() {
+        if (debateHistory.length < 2) {
+            alert("Please have at least one exchange with AI before evaluation.");
+            return;
+        }
+        const evaluationPrompt = {
+            role: "system",
+            content: `You are an impartial debate judge. Based on the entire conversation history, evaluate the student's performance in the debate about spending vs saving. Provide:
+1. A total score out of 100 (breakdown: logical reasoning 40, use of article evidence 30, English fluency 30).
+2. Specific strengths and weaknesses.
+3. Suggestions for improvement.
+Keep the evaluation in English, concise, within 200 words.`
+        };
+        const messages = [evaluationPrompt, ...debateHistory.slice(-12)];
+        const proxyUrl = document.getElementById("proxyUrlInput").value.trim();
+        const apiKey = document.getElementById("apiKeyInput").value.trim();
+        const model = document.getElementById("modelSelect").value;
+        
+        let evaluationText = "";
+        if (proxyUrl) {
+            try {
+                const res = await fetch(proxyUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages, model }) });
+                const data = await res.json();
+                evaluationText = data.reply || data.choices?.[0]?.message?.content || "Evaluation failed.";
+            } catch(e) { evaluationText = `Evaluation error: ${e.message}`; }
+        } else if (apiKey) {
+            const baseURL = model.includes("deepseek") ? "https://api.deepseek.com/v1/chat/completions" : "https://api.openai.com/v1/chat/completions";
+            try {
+                const res = await fetch(baseURL, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` }, body: JSON.stringify({ model, messages, temperature: 0.7 }) });
+                const data = await res.json();
+                evaluationText = data.choices[0].message.content;
+            } catch(e) { evaluationText = `Evaluation error: ${e.message}`; }
+        } else {
+            evaluationText = "⚠️ No proxy or API Key configured. Cannot evaluate.";
+        }
+        const evalDiv = document.getElementById("evaluationResult");
+        evalDiv.innerHTML = `<strong>🏆 Debate Evaluation & Score:</strong><br>${escapeHtml(evaluationText)}`;
+        evalDiv.classList.remove("hidden");
+    }
+    
+    function clearChat() {
+        debateHistory = [];
+        const chatWindow = document.getElementById("chatWindow");
+        chatWindow.innerHTML = `<div class="chat-message ai-msg">🤖 AI: Chat cleared. Start a new debate in English!</div>`;
+        document.getElementById("evaluationResult").classList.add("hidden");
+    }
+    function switchStance() {
+        aiStance = aiStance === "pro" ? "con" : "pro";
+        document.getElementById("switchStanceBtn").innerHTML = `🔄 Switch AI Stance (current: ${aiStance === "pro" ? "pro-spending" : "pro-saving"})`;
+        alert(`AI stance switched to "${aiStance === "pro" ? "support spending" : "support saving"}".`);
+    }
+    
+    // 提交全部数据
+    async function submitAllData() {
+        if (!student) { alert("Name missing. Refresh and enter."); return; }
+        const payload = {
+            studentName: student,
+            timestamp: new Date().toISOString(),
+            scores: { vocabulary: scores.l1, matching: scores.l2, total: scores.l1 + scores.l2 },
+            answers: {
+                vocabulary: vocabAnswers.map((ans, i) => ({ word: vocabList[i].word, userAnswer: ans, correct: ans === vocabList[i].word })),
+                matching: matchAnswers.map((ans, i) => ({ statement: matchStatements[i].text, userParagraph: ans, correctParagraph: matchStatements[i].correctPara, isCorrect: ans === matchStatements[i].correctPara })),
+                debateHistory: debateHistory
+            },
+            previewUsed: { level2: previewMode.l2, level3: previewMode.l3 }
+        };
+        const statusDiv = document.getElementById("submitApiStatus");
+        statusDiv.innerHTML = "⏳ Submitting...";
+        try {
+            const res = await fetch(API_URL_SUBMIT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+            if (res.ok) statusDiv.innerHTML = "✅ Submission successful! Teacher received your data and debate record.";
+            else statusDiv.innerHTML = `⚠️ Server ${res.status}, try again.`;
+        } catch(e) { statusDiv.innerHTML = "❌ Network error."; }
+    }
+    
+    // 关卡切换
+    function switchLevel(lvl) {
+        if (lvl === 2) {
+            if (!unlocked.l2 && scores.l1 < 21) {
+                if (confirm("Act 1 not passed. Enter PREVIEW mode? (answers not scored)")) { previewMode.l2 = true; unlocked.l2 = true; }
+                else return;
+            } else if (scores.l1 >= 21 && !unlocked.l2) { unlocked.l2 = true; previewMode.l2 = false; }
+            else if (unlocked.l2 && scores.l1 >= 21) previewMode.l2 = false;
+        }
+        if (lvl === 3) {
+            if (!unlocked.l3 && scores.l2 < 28) {
+                if (confirm("Act 2 not passed. Enter PREVIEW mode? (debate still works)")) { previewMode.l3 = true; unlocked.l3 = true; }
+                else return;
+            } else if (scores.l2 >= 28 && !unlocked.l3) { unlocked.l3 = true; previewMode.l3 = false; }
+            else if (unlocked.l3 && scores.l2 >= 28) previewMode.l3 = false;
+        }
+        activeLevel = lvl;
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active-panel"));
+        document.getElementById(`panel${lvl}`).classList.add("active-panel");
+        document.querySelectorAll(".level-tab").forEach(tab => tab.classList.remove("active"));
+        document.querySelector(`.level-tab[data-lvl="${lvl}"]`).classList.add("active");
+        if (lvl === 2) renderLevel2();
+        if (lvl === 3) { renderLevel3(); }
+        updateTotalUI();
+    }
+    function renderLevel3() {
+        let noticeDiv = document.getElementById("previewNotice3");
+        if (previewMode.l3) {
+            noticeDiv.classList.remove("hidden");
+            noticeDiv.innerHTML = "⚠️ Preview mode: debate record still saved, but official unlock requires passing Act 2.";
+        } else {
+            noticeDiv.classList.add("hidden");
+        }
+    }
+    
+    // 事件绑定
+    function attachEvents() {
+        document.getElementById("submitL1").addEventListener("click", submitLevel1);
+        document.getElementById("submitL2").addEventListener("click", submitLevel2);
+        document.getElementById("sendDebateBtn").addEventListener("click", sendDebate);
+        document.getElementById("clearChatBtn").addEventListener("click", clearChat);
+        document.getElementById("switchStanceBtn").addEventListener("click", switchStance);
+        document.getElementById("evaluateDebateBtn").addEventListener("click", evaluateDebate);
+        document.getElementById("submitAllDataBtn").addEventListener("click", submitAllData);
+        document.getElementById("editNameBtn").addEventListener("click", () => {
+            let newName = prompt("Enter new name:", student);
+            if (newName && newName.trim()) { student = newName.trim(); localStorage.setItem("student_name", student); displayNameSpan.innerText = student; }
+        });
+        document.querySelectorAll(".level-tab").forEach(tab => {
+            tab.addEventListener("click", (e) => { switchLevel(parseInt(tab.dataset.lvl)); });
+        });
+    }
+    
+    function initName() {
+        let saved = localStorage.getItem("student_name");
+        if (saved && saved.trim()) {
+            student = saved.trim();
+            displayNameSpan.innerText = student;
+            nameModalDiv.style.display = "none";
+            gameRoot.style.display = "block";
+            renderLevel1();
+            attachEvents();
+        } else {
+            nameModalDiv.style.display = "flex";
+            gameRoot.style.display = "none";
+        }
+    }
+    document.getElementById("confirmName")?.addEventListener("click", () => {
+        let name = document.getElementById("studentName").value.trim();
+        if (!name) { document.getElementById("nameError").innerText = "Please enter your name"; return; }
+        student = name;
+        localStorage.setItem("student_name", student);
+        nameModalDiv.style.display = "none";
+        gameRoot.style.display = "block";
+        renderLevel1();
+        attachEvents();
+    });
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
+    initName();
+</script>
+</body>
+</html>
