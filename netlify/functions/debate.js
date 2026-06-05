@@ -1,18 +1,38 @@
+const https = require("https");
+
+const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function httpsPost(url, headers, body) {
+    return new Promise((resolve, reject) => {
+        const parsed = new URL(url);
+        const options = {
+            hostname: parsed.hostname,
+            path: parsed.pathname,
+            method: "POST",
+            headers: { ...headers, "Content-Length": Buffer.byteLength(body) },
+        };
+        const req = https.request(options, (res) => {
+            let data = "";
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => resolve({ status: res.statusCode, body: data }));
+        });
+        req.on("error", reject);
+        req.write(body);
+        req.end();
+    });
+}
+
 exports.handler = async function (event) {
     if (event.httpMethod === "OPTIONS") {
-        return {
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Methods": "POST, OPTIONS",
-            },
-            body: "",
-        };
+        return { statusCode: 200, headers: CORS_HEADERS, body: "" };
     }
 
     if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "Method Not Allowed" };
+        return { statusCode: 405, headers: CORS_HEADERS, body: "Method Not Allowed" };
     }
 
     try {
@@ -22,46 +42,47 @@ exports.handler = async function (event) {
         if (!apiKey) {
             return {
                 statusCode: 500,
-                headers: { "Access-Control-Allow-Origin": "*" },
-                body: JSON.stringify({ error: "API key not configured on server." }),
+                headers: CORS_HEADERS,
+                body: JSON.stringify({ error: "DEEPSEEK_API_KEY not set in Netlify environment variables." }),
             };
         }
 
-        const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
+        const requestBody = JSON.stringify({
+            model: model || "deepseek-chat",
+            messages: messages,
+            temperature: 0.8,
+            max_tokens: 400,
+        });
+
+        const result = await httpsPost(
+            "https://api.deepseek.com/v1/chat/completions",
+            {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${apiKey}`,
             },
-            body: JSON.stringify({
-                model: model || "deepseek-chat",
-                messages: messages,
-                temperature: 0.8,
-                max_tokens: 400,
-            }),
-        });
+            requestBody
+        );
 
-        if (!response.ok) {
-            const errText = await response.text();
+        if (result.status !== 200) {
             return {
-                statusCode: response.status,
-                headers: { "Access-Control-Allow-Origin": "*" },
-                body: JSON.stringify({ error: errText }),
+                statusCode: result.status,
+                headers: CORS_HEADERS,
+                body: JSON.stringify({ error: result.body }),
             };
         }
 
-        const data = await response.json();
+        const data = JSON.parse(result.body);
         const reply = data.choices?.[0]?.message?.content || "No response.";
 
         return {
             statusCode: 200,
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: CORS_HEADERS,
             body: JSON.stringify({ reply }),
         };
     } catch (err) {
         return {
             statusCode: 500,
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: CORS_HEADERS,
             body: JSON.stringify({ error: err.message }),
         };
     }
