@@ -900,7 +900,7 @@
         <h2>🎓 进入小李的财务世界</h2>
         <p>请填写你的姓名或学号，开始闯关</p>
         <input type="text" id="studentName" placeholder="例: 李明 / 20240001">
-        <button id="confirmName" type="button" class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;" onclick="(window.handleConfirmName || function(){ alert('⚠️ JS 加载失败，handleConfirmName 未定义！请检查 Console。'); })()">🚀 开始闯关</button>
+        <button id="confirmName" type="button" class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;">🚀 开始闯关</button>
         <div id="nameError" style="color:var(--error); font-size:0.82rem; margin-top:8px;"></div>
     </div>
 </div>
@@ -1708,7 +1708,6 @@ Rules:
         } else {
             evaluationText = "⚠️ No proxy or API Key configured. Cannot evaluate.";
         }
-        const evalDiv = document.getElementById("evaluationResult");
         const replayCardHtml = `
             <div class="replay-card">
                 <div class="replay-card-title">🔄 想再来一局？</div>
