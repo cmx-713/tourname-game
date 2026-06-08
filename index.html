@@ -900,7 +900,7 @@
         <h2>🎓 进入小李的财务世界</h2>
         <p>请填写你的姓名或学号，开始闯关</p>
         <input type="text" id="studentName" placeholder="例: 李明 / 20240001">
-        <button id="confirmName" class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;">🚀 开始闯关</button>
+        <button id="confirmName" type="button" class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;" onclick="(window.handleConfirmName || function(){ alert('⚠️ JS 加载失败，handleConfirmName 未定义！请检查 Console。'); })()">🚀 开始闯关</button>
         <div id="nameError" style="color:var(--error); font-size:0.82rem; margin-top:8px;"></div>
     </div>
 </div>
@@ -943,6 +943,7 @@
     let debateHistory = [];
     let scores = { l1: 0, l2: 0, l3: 0 };
     let comboBonus = 0; // 连击额外奖励分（最多+10，独立于100分之外）
+    const sessionStartedAt = Date.now(); // 学习开始时间（用于计算用时）
     let unlocked = { l2: false, l3: false };
     let previewMode = { l2: false, l3: false };
     let activeLevel = 1;
@@ -1635,9 +1636,19 @@ Rules:
 
     async function evaluateDebate() {
         if (debateHistory.length < 2) {
-            alert("Please have at least one exchange with AI before evaluation.");
+            alert("请至少与 AI 完成一轮辩论后再申请评价。");
             return;
         }
+        // 显示加载状态
+        const evalDiv = document.getElementById("evaluationResult");
+        evalDiv.innerHTML = `<div class="eval-title">🏆 辩论评价与得分</div>
+            <div class="eval-content" style="text-align:center;padding:20px;color:var(--text-muted);">
+                <div style="font-size:1.5rem;margin-bottom:8px;">⏳</div>
+                <div>AI 评审正在分析你的辩论表现，请稍候…</div>
+                <div style="font-size:0.78rem;margin-top:6px;">通常需要 5-10 秒</div>
+            </div>`;
+        evalDiv.classList.remove("hidden");
+        evalDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         const evaluationPrompt = {
             role: "system",
             content: `你是一位中立的英语辩论评审。请根据对话历史，对学生在"花钱 vs 存钱"辩论中的表现给出评价。请严格使用以下中文 Markdown 格式输出，不要添加任何额外内容：
@@ -1664,22 +1675,33 @@ Rules:
 - 总长度控制在 200 字以内，简洁有力。
 - 评分要严格，不要给所有学生都打高分；优秀的回合才给高分。`
         };
-        const messages = [evaluationPrompt, ...debateHistory.slice(-12)];
+        // 关键：把辩论历史"包装"成只读上下文，避免 AI 误以为要继续辩论
+        const transcript = debateHistory.slice(-16).map((m, i) => {
+            const speaker = m.role === 'user' ? '【学生】' : '【AI对手】';
+            return `${speaker} ${m.content}`;
+        }).join('\n');
+        const finalUserPrompt = {
+            role: 'user',
+            content: `以下是完整的辩论对话记录（学生立场：${studentStance === 'spend' ? 'SPEND' : 'SAVE'}）：\n\n${transcript}\n\n=== 辩论结束 ===\n\n现在你是评审，不要继续辩论。请严格按照系统提示的中文 Markdown 模板输出评价。直接输出评价，不要任何前置说明、不要英文。`
+        };
+        const messages = [evaluationPrompt, finalUserPrompt];
+
         const proxyUrl = PROXY_URL;
         const apiKey = document.getElementById("apiKeyInput").value.trim();
         const model = document.getElementById("modelSelect").value || "deepseek-chat";
 
         let evaluationText = "";
+        const evalBody = { messages, model, max_tokens: 700, temperature: 0.4 };
         if (proxyUrl) {
             try {
-                const res = await fetch(proxyUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages, model }) });
+                const res = await fetch(proxyUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(evalBody) });
                 const data = await res.json();
                 evaluationText = data.reply || data.choices?.[0]?.message?.content || "Evaluation failed.";
             } catch(e) { evaluationText = `Evaluation error: ${e.message}`; }
         } else if (apiKey) {
             const baseURL = model.includes("deepseek") ? "https://api.deepseek.com/v1/chat/completions" : "https://api.openai.com/v1/chat/completions";
             try {
-                const res = await fetch(baseURL, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` }, body: JSON.stringify({ model, messages, temperature: 0.7 }) });
+                const res = await fetch(baseURL, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` }, body: JSON.stringify(evalBody) });
                 const data = await res.json();
                 evaluationText = data.choices[0].message.content;
             } catch(e) { evaluationText = `Evaluation error: ${e.message}`; }
@@ -1739,10 +1761,29 @@ Rules:
     // 提交全部数据
     async function submitAllData() {
         if (!student) { alert("Name missing. Refresh and enter."); return; }
+        const userTurns = debateHistory.filter(m => m.role === 'user').length;
+        const debateWordCount = debateHistory
+            .filter(m => m.role === 'user')
+            .reduce((sum, m) => sum + m.content.split(/\s+/).filter(Boolean).length, 0);
         const payload = {
             studentName: student,
             timestamp: new Date().toISOString(),
-            scores: { vocabulary: scores.l1, matching: scores.l2, debate: scores.l3, comboBonus: comboBonus, total: scores.l1 + scores.l2 + scores.l3 + comboBonus },
+            durationMs: Date.now() - sessionStartedAt,
+            scores: {
+                vocabulary: scores.l1,
+                matching: scores.l2,
+                debate: scores.l3,
+                comboBonus: comboBonus,
+                total: scores.l1 + scores.l2 + scores.l3 + comboBonus
+            },
+            behavior: {
+                hintsUsed: hintsUsed,
+                maxCombo: maxCombo,
+                studentStance: studentStance,
+                keywordsHit: Array.from(usedKeywords),
+                debateRounds: userTurns,
+                debateWordCount: debateWordCount
+            },
             answers: {
                 vocabulary: vocabAnswers.map((ans, i) => ({ word: vocabList[i].word, userAnswer: ans, correct: ans === vocabList[i].word })),
                 matching: matchAnswers.map((ans, i) => ({ statement: matchStatements[i].text, userParagraph: ans, correctParagraph: matchStatements[i].correctPara, isCorrect: ans === matchStatements[i].correctPara })),
@@ -1838,30 +1879,60 @@ Rules:
         });
     }
     
+    function safeAttachEvents() {
+        try { attachEvents(); }
+        catch (err) { console.error('[attachEvents 出错]', err); }
+    }
+
+    function startGame(name) {
+        student = name;
+        localStorage.setItem("student_name", student);
+        if (displayNameSpan) displayNameSpan.innerText = student;
+        if (nameModalDiv) nameModalDiv.style.display = "none";
+        if (gameRoot) gameRoot.style.display = "block";
+        try { renderLevel1(); } catch (e) { console.error('[renderLevel1 出错]', e); }
+        safeAttachEvents();
+    }
+
     function initName() {
         let saved = localStorage.getItem("student_name");
         if (saved && saved.trim()) {
-            student = saved.trim();
-            displayNameSpan.innerText = student;
-            nameModalDiv.style.display = "none";
-            gameRoot.style.display = "block";
-            renderLevel1();
-            attachEvents();
+            startGame(saved.trim());
         } else {
-            nameModalDiv.style.display = "flex";
-            gameRoot.style.display = "none";
+            if (nameModalDiv) nameModalDiv.style.display = "flex";
+            if (gameRoot) gameRoot.style.display = "none";
         }
     }
-    document.getElementById("confirmName")?.addEventListener("click", () => {
-        let name = document.getElementById("studentName").value.trim();
-        if (!name) { document.getElementById("nameError").innerText = "Please enter your name"; return; }
-        student = name;
-        localStorage.setItem("student_name", student);
-        nameModalDiv.style.display = "none";
-        gameRoot.style.display = "block";
-        renderLevel1();
-        attachEvents();
-    });
+
+    function handleConfirmName() {
+        console.log('[confirmName] clicked');
+        try {
+            const inputEl = document.getElementById("studentName");
+            const errEl = document.getElementById("nameError");
+            const name = inputEl ? inputEl.value.trim() : '';
+            if (!name) { if (errEl) errEl.innerText = "请填写姓名"; return; }
+            if (errEl) errEl.innerText = '';
+            startGame(name);
+        } catch (err) {
+            console.error('[handleConfirmName 出错]', err);
+            alert('启动游戏出错：' + err.message + '\n\n请按 F12 打开开发者工具，把 Console 中的红色错误截图发给老师。');
+        }
+    }
+    window.handleConfirmName = handleConfirmName;
+
+    const confirmBtn = document.getElementById("confirmName");
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", handleConfirmName);
+    } else {
+        console.warn('[init] confirmName 按钮未找到');
+    }
+    // 按 Enter 键也能提交
+    const studentInput = document.getElementById("studentName");
+    if (studentInput) {
+        studentInput.addEventListener("keydown", (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); handleConfirmName(); }
+        });
+    }
     function escapeHtml(str) {
         return String(str)
             .replace(/&/g, '&amp;')
